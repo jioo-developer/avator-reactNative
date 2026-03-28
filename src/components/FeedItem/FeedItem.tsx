@@ -1,9 +1,9 @@
+import Profile from "@/components/Profile";
 import { colors } from "@/constants";
+import { Post } from "@/types";
+import { Octicons, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Octicons, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { Post } from "@/types";
-import Profile from "./Profile";
 
 interface FeedItemProps {
   post: Post;

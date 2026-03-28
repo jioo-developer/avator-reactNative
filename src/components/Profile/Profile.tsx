@@ -24,7 +24,7 @@ function Profile({
           source={
             imageUri
               ? { uri: imageUri }
-              : require("../../assets/images/default-avatar.png")
+              : require("../../../assets/images/default-avatar.png")
           }
           style={styles.avatar}
         />

@@ -1,6 +1,6 @@
-import { Link, Stack } from "expo-router";
-import Foundation from "@expo/vector-icons/Foundation";
 import { colors } from "@/constants";
+import Foundation from "@expo/vector-icons/Foundation";
+import { Link, Stack } from "expo-router";
 
 export default function AuthLayout() {
   return (
@@ -15,7 +15,7 @@ export default function AuthLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "로그인",
+          title: "로그인으로 이동",
           headerShown: true,
           headerLeft: () => (
             <Link href={"/"} replace style={{ paddingRight: 5 }}>

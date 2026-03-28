@@ -1,8 +1,8 @@
+import CustomButton from "@/components/CustomButton";
+import { colors } from "@/constants";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import CustomButton from "./CustomButton";
-import { colors } from "@/constants";
 
 interface FixedBottomCTAProps {
   label: string;
