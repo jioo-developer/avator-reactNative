@@ -15,7 +15,7 @@ export default function AuthLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "로그인으로 이동",
+          title: "로그인 페이지로 이동",
           headerShown: true,
           headerLeft: () => (
             <Link href={"/"} replace style={{ paddingRight: 5 }}>
