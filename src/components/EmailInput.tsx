@@ -1,5 +1,7 @@
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { View } from "react-native";
+import EmailDomainSuggestions from "./EmailDomainSuggestions";
 import InputField from "./InputField";
 
 function EmailInput() {
@@ -20,18 +22,21 @@ function EmailInput() {
         },
       }}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <InputField
-          autoFocus
-          label="이메일"
-          placeholder="이메일을 입력해주세요."
-          inputMode="email"
-          returnKeyType="next"
-          submitBehavior="submit"
-          onSubmitEditing={() => setFocus("password")}
-          value={value}
-          onChangeText={onChange}
-          error={error?.message}
-        />
+        <View>
+          <InputField
+            autoFocus
+            label="이메일"
+            placeholder="이메일을 입력해주세요."
+            inputMode="email"
+            returnKeyType="next"
+            submitBehavior="submit"
+            onSubmitEditing={() => setFocus("password")}
+            value={value}
+            onChangeText={onChange}
+            error={error?.message}
+          />
+          <EmailDomainSuggestions value={value} onSelect={onChange} />
+        </View>
       )}
     />
   );
