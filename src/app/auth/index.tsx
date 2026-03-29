@@ -8,7 +8,7 @@ export default function AuthScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
-          source={require("../../../assets/images/logo.png")}
+          source={require("@/assets/images/logo.png")}
           style={styles.logo}
         />
       </View>

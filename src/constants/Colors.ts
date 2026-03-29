@@ -13,7 +13,7 @@ export const colors = {
   GRAY_600: "#4B5563",
   GRAY_700: "#374151",
   BLACK: "#000",
-} as const;
+};
 
 export default {
   light: {

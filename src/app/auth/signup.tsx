@@ -1,20 +1,41 @@
+import EmailInput from "@/components/EmailInput";
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import InputField from "@/components/InputField";
+import PasswordConfirmInput from "@/components/PasswordConfirmInput";
+import PasswordInput from "@/components/PasswordInput";
+import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
+type FormValues = {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+};
+
 export default function SignupScreen() {
+  const signupForm = useForm<FormValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+      passwordConfirm: "",
+    },
+  });
+
+  const onSubmit = (formValues: FormValues) => {
+    console.log("formValues", formValues);
+  };
+
   return (
-    <>
+    <FormProvider {...signupForm}>
       <View style={styles.container}>
-        <InputField label="이메일" placeholder="이메일을 입력해주세요." />
-        <InputField label="비밀번호" placeholder="비밀번호를 입력해주세요." />
-        <InputField
-          label="비밀번호 확인"
-          placeholder="비밀번호를 입력해주세요."
-        />
+        <EmailInput />
+        <PasswordInput submitBehavior="submit" />
+        <PasswordConfirmInput />
       </View>
-      <FixedBottomCTA label="회원가입하기" onPress={() => {}} />
-    </>
+      <FixedBottomCTA
+        label="회원가입하기"
+        onPress={signupForm.handleSubmit(onSubmit)}
+      />
+    </FormProvider>
   );
 }
 
