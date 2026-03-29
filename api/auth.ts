@@ -12,13 +12,13 @@ async function postsSignUp(body: RequestUser) {
 }
 
 async function postsLogin(body: RequestUser): Promise<{ accessToken: string }> {
-    const { data } = await axiosInstance.post("auth/login", body);
+    const { data } = await axiosInstance.post("/auth/signin", body);
     return data;
 }
 
 async function getUserInfo() {
     const accessToken = await getSecureStore("accessToken");
-    const { data } = await axiosInstance.get("auth/user", {
+    const { data } = await axiosInstance.get("/auth/me", {
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },

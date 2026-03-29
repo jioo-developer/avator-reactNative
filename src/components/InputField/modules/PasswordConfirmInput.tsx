@@ -1,6 +1,6 @@
 import React from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
-import InputField from "./InputField";
+import InputField from "..";
 
 function PasswordConfirmInput() {
   const { control } = useFormContext();

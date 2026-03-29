@@ -1,8 +1,7 @@
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { View } from "react-native";
-import EmailDomainSuggestions from "./EmailDomainSuggestions";
-import InputField from "./InputField";
+import InputField from "..";
 
 function EmailInput() {
   const { control, setFocus } = useFormContext();
@@ -35,7 +34,6 @@ function EmailInput() {
             onChangeText={onChange}
             error={error?.message}
           />
-          <EmailDomainSuggestions value={value} onSelect={onChange} />
         </View>
       )}
     />

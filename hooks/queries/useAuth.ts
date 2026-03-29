@@ -5,22 +5,23 @@ import { deleteSecureStore, saveSecureStore } from "@/utils/secureStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect } from "react";
+import { Alert } from "react-native";
 
-function useGetInfo() {
-    const { data, isError } = useQuery({
-        queryKey: ["auth", "getInfo"],
+function useGetUserInfo() {
+    const { data, isError, isPending } = useQuery({
         queryFn: getUserInfo,
+        queryKey: ["auth", "getUserInfo"],
     });
 
     useEffect(() => {
         if (isError) {
             removeHeader("Authorization");
             deleteSecureStore("accessToken");
-            router.replace("/auth");
+            queryClient.removeQueries({ queryKey: ["auth", "getUserInfo"] });
         }
     }, [isError]);
 
-    return { data };
+    return { data, isPending };
 }
 
 function useLogin() {
@@ -29,36 +30,49 @@ function useLogin() {
         onSuccess: async ({ accessToken }) => {
             setHeader("Authorization", `Bearer ${accessToken}`);
             await saveSecureStore("accessToken", accessToken);
-            queryClient.fetchQuery({ queryKey: ["auth", "getInfo"] });
+            await queryClient.fetchQuery({
+                queryKey: ["auth", "getUserInfo"],
+                queryFn: getUserInfo,
+            });
             router.replace("/(tabs)/home");
         },
-        onError: (error) => {
-            console.log(error);
+        onError: () => {
+            Alert.alert("로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.");
         },
     });
 }
 
-function useSignUp() {
+function useSignup() {
     return useMutation({
         mutationFn: postsSignUp,
-        onSuccess: () => {
-            router.replace("/auth/login");
-        },
-        onError: (error) => {
-            console.log(error);
+        onSuccess: () => router.replace("/auth/login"),
+        onError: () => {
+            console.log("signup error");
         },
     });
 }
 
 function useAuth() {
-    const { data } = useGetInfo();
-    const loginMuation = useLogin();
-    const signUpMuation = useSignUp();
+    const { data, isPending } = useGetUserInfo();
+    const loginMutation = useLogin();
+    const signupMutation = useSignup();
+
+    const logout = async () => {
+        removeHeader("Authorization");
+        await deleteSecureStore("accessToken");
+        queryClient.removeQueries({ queryKey: ["auth", "getUserInfo"] });
+        router.replace("/auth");
+    };
 
     return {
-        auth: { id: data?.id },
-        loginMuation,
-        signUpMuation,
+        auth: {
+            id: data?.id || "",
+            email: data?.email || "",
+        },
+        isAuthLoading: isPending,
+        loginMutation,
+        signupMutation,
+        logout,
     };
 }
 

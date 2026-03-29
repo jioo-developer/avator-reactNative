@@ -1,5 +1,5 @@
 import queryClient from "@/api/queryClient";
-import { QueryDevtools } from "@/components/DevTools/QueryDevtools";
+import useAuth from "@/hooks/queries/useAuth";
 import {
   SpaceMono_400Regular,
   useFonts,
@@ -11,16 +11,6 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 export default function RootLayout() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <RootNavigator />
-    </QueryClientProvider>
-  );
-}
-
-SplashScreen.preventAutoHideAsync();
-
-function RootNavigator() {
   const [loaded, error] = useFonts({
     SpaceMono: SpaceMono_400Regular,
   });
@@ -36,13 +26,24 @@ function RootNavigator() {
   }
 
   return (
+    <QueryClientProvider client={queryClient}>
+      <RootNavigator />
+    </QueryClientProvider>
+  );
+}
+
+SplashScreen.preventAutoHideAsync();
+
+function RootNavigator() {
+  const { auth } = useAuth();
+  console.log("auth", auth);
+  return (
     <>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-      <QueryDevtools />
     </>
   );
 }
