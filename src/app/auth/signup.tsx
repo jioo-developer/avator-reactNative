@@ -1,8 +1,7 @@
+import EmailInput from "@/components/EmailInput";
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import EmailDomainSuggestions from "@/components/InputField/modules/EmailDomainSuggestions";
-import EmailInput from "@/components/InputField/modules/EmailInput";
-import PasswordConfirmInput from "@/components/InputField/modules/PasswordConfirmInput";
-import PasswordInput from "@/components/InputField/modules/PasswordInput";
+import PasswordConfirmInput from "@/components/PasswordConfirmInput";
+import PasswordInput from "@/components/PasswordInput";
 import useAuth from "@/hooks/queries/useAuth";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
@@ -14,7 +13,7 @@ type FormValues = {
 };
 
 export default function SignupScreen() {
-  const { signupMutation } = useAuth();
+  const { signUpMuation } = useAuth();
   const signupForm = useForm<FormValues>({
     defaultValues: {
       email: "",
@@ -23,23 +22,15 @@ export default function SignupScreen() {
     },
   });
 
-  const emailValue = signupForm.watch("email");
-
   const onSubmit = (formValues: FormValues) => {
     const { email, password } = formValues
-    signupMutation.mutate({ email, password });
+    signUpMuation.mutate({ email, password });
   };
 
   return (
     <FormProvider {...signupForm}>
       <View style={styles.container}>
-        <View>
-          <EmailInput />
-          <EmailDomainSuggestions
-            value={emailValue}
-            onSelect={(email) => signupForm.setValue("email", email)}
-          />
-        </View>
+        <EmailInput />
         <PasswordInput submitBehavior="submit" />
         <PasswordConfirmInput />
       </View>

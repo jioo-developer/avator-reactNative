@@ -1,5 +1,5 @@
 import queryClient from "@/api/queryClient";
-import useAuth from "@/hooks/queries/useAuth";
+import { QueryDevtools } from "@/components/DevTools/QueryDevtools";
 import {
   SpaceMono_400Regular,
   useFonts,
@@ -9,8 +9,21 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import Toast from "react-native-toast-message";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RootNavigator />
+      <Toast />
+    </QueryClientProvider>
+  );
+}
+
+
+function RootNavigator() {
   const [loaded, error] = useFonts({
     SpaceMono: SpaceMono_400Regular,
   });
@@ -26,24 +39,13 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <RootNavigator />
-    </QueryClientProvider>
-  );
-}
-
-SplashScreen.preventAutoHideAsync();
-
-function RootNavigator() {
-  const { auth } = useAuth();
-  console.log("auth", auth);
-  return (
     <>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
+      <QueryDevtools />
     </>
   );
 }

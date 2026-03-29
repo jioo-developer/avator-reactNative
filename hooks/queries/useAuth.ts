@@ -5,23 +5,22 @@ import { deleteSecureStore, saveSecureStore } from "@/utils/secureStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import { Alert } from "react-native";
 
-function useGetUserInfo() {
-    const { data, isError, isPending } = useQuery({
+function useGetInfo() {
+    const { data, isError } = useQuery({
+        queryKey: ["auth", "getInfo"],
         queryFn: getUserInfo,
-        queryKey: ["auth", "getUserInfo"],
     });
 
     useEffect(() => {
         if (isError) {
             removeHeader("Authorization");
             deleteSecureStore("accessToken");
-            queryClient.removeQueries({ queryKey: ["auth", "getUserInfo"] });
+            router.replace("/auth");
         }
     }, [isError]);
 
-    return { data, isPending };
+    return { data };
 }
 
 function useLogin() {
@@ -30,49 +29,36 @@ function useLogin() {
         onSuccess: async ({ accessToken }) => {
             setHeader("Authorization", `Bearer ${accessToken}`);
             await saveSecureStore("accessToken", accessToken);
-            await queryClient.fetchQuery({
-                queryKey: ["auth", "getUserInfo"],
-                queryFn: getUserInfo,
-            });
+            queryClient.fetchQuery({ queryKey: ["auth", "getInfo"] });
             router.replace("/(tabs)/home");
         },
-        onError: () => {
-            Alert.alert("로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.");
+        onError: (error) => {
+            console.log(error);
         },
     });
 }
 
-function useSignup() {
+function useSignUp() {
     return useMutation({
         mutationFn: postsSignUp,
-        onSuccess: () => router.replace("/auth/login"),
-        onError: () => {
-            console.log("signup error");
+        onSuccess: () => {
+            router.replace("/auth/login");
+        },
+        onError: (error) => {
+            console.log(error);
         },
     });
 }
 
 function useAuth() {
-    const { data, isPending } = useGetUserInfo();
-    const loginMutation = useLogin();
-    const signupMutation = useSignup();
-
-    const logout = async () => {
-        removeHeader("Authorization");
-        await deleteSecureStore("accessToken");
-        queryClient.removeQueries({ queryKey: ["auth", "getUserInfo"] });
-        router.replace("/auth");
-    };
+    const { data } = useGetInfo();
+    const loginMuation = useLogin();
+    const signUpMuation = useSignUp();
 
     return {
-        auth: {
-            id: data?.id || "",
-            email: data?.email || "",
-        },
-        isAuthLoading: isPending,
-        loginMutation,
-        signupMutation,
-        logout,
+        auth: { id: data?.id },
+        loginMuation,
+        signUpMuation,
     };
 }
 
