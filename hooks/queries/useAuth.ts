@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 
 function useGetUserInfo() {
     const { data, isError, isPending } = useQuery({
@@ -30,9 +31,14 @@ function useLogin() {
         onSuccess: async ({ accessToken }) => {
             setHeader("Authorization", `Bearer ${accessToken}`);
             await saveSecureStore("accessToken", accessToken);
-            await queryClient.fetchQuery({
+            const userInfo = await queryClient.fetchQuery({
                 queryKey: ["auth", "getUserInfo"],
                 queryFn: getUserInfo,
+            });
+
+            Toast.show({
+                type: "success",
+                text1: `${userInfo.nickname}님 환영합니다.`,
             });
             router.replace("/(tabs)/home");
         },

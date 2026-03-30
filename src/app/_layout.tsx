@@ -1,5 +1,4 @@
 import queryClient from "@/api/queryClient";
-import useAuth from "@/hooks/queries/useAuth";
 import {
   SpaceMono_400Regular,
   useFonts,
@@ -37,15 +36,6 @@ export default function RootLayout() {
 SplashScreen.preventAutoHideAsync();
 
 function RootNavigator() {
-  const { auth } = useAuth();
-
-  useEffect(() => {
-    if (!auth.id) return;
-    Toast.show({
-      type: "success",
-      text1: `${auth.nickname}님 환영합니다.`,
-    });
-  }, [auth.id])
   return (
     <>
       <Stack>
