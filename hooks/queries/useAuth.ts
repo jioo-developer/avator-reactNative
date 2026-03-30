@@ -68,6 +68,7 @@ function useAuth() {
         auth: {
             id: data?.id || "",
             email: data?.email || "",
+            nickname: data?.nickname || "",
         },
         isAuthLoading: isPending,
         loginMutation,

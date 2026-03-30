@@ -9,6 +9,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -28,6 +29,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <RootNavigator />
+      <Toast />
     </QueryClientProvider>
   );
 }
@@ -36,7 +38,14 @@ SplashScreen.preventAutoHideAsync();
 
 function RootNavigator() {
   const { auth } = useAuth();
-  console.log("auth", auth);
+
+  useEffect(() => {
+    if (!auth.id) return;
+    Toast.show({
+      type: "success",
+      text1: `${auth.nickname}님 환영합니다.`,
+    });
+  }, [auth.id])
   return (
     <>
       <Stack>
