@@ -1,2 +1,10 @@
 export { colors, default } from './Colors';
-export { dummyData } from './data';
+
+const queryKeys = {
+    AUTH: "auth",
+    POST: "post",
+    GET_ME: "getMe",
+    GET_POSTS: "getPosts",
+};
+
+export { queryKeys };

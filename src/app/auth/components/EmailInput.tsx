@@ -1,7 +1,7 @@
+import InputField from "@/components/InputField/InputField";
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { View } from "react-native";
-import InputField from "..";
 
 function EmailInput() {
   const { control, setFocus } = useFormContext();

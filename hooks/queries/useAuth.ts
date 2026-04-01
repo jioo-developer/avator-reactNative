@@ -1,7 +1,9 @@
 import { getUserInfo, postsLogin, postsSignUp } from "@/api/auth";
-import queryClient from "@/api/queryClient";
+import queryClient from "@/api/config/queryClient";
+import { queryKeys } from "@/constants";
+import { User } from "@/types";
 import { removeHeader, setHeader } from "@/utils/ApiHeader";
-import { deleteSecureStore, saveSecureStore } from "@/utils/secureStore";
+import { deleteSecureStore, getSecureStore, saveSecureStore } from "@/utils/secureStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect } from "react";
@@ -9,18 +11,31 @@ import { Alert } from "react-native";
 import Toast from "react-native-toast-message";
 
 function useGetUserInfo() {
-    const { data, isError, isPending } = useQuery({
+    const { data, isSuccess, isError, isPending } = useQuery({
         queryFn: getUserInfo,
-        queryKey: ["auth", "getUserInfo"],
+        queryKey: [queryKeys.AUTH, queryKeys.GET_ME],
     });
 
     useEffect(() => {
-        if (isError) {
-            removeHeader("Authorization");
-            deleteSecureStore("accessToken");
-            queryClient.removeQueries({ queryKey: ["auth", "getUserInfo"] });
-        }
-    }, [isError]);
+        const syncAuthState = async () => {
+            if (isError) {
+                removeHeader("Authorization");
+                await deleteSecureStore("accessToken");
+                queryClient.removeQueries({ queryKey: [queryKeys.AUTH, queryKeys.GET_ME] });
+                return;
+            }
+
+            if (!isSuccess) return;
+
+            const accessToken = await getSecureStore("accessToken");
+
+            if (!accessToken) return;
+
+            setHeader("Authorization", `Bearer ${accessToken}`);
+        };
+
+        syncAuthState();
+    }, [isError, isSuccess]);
 
     return { data, isPending };
 }
@@ -31,8 +46,8 @@ function useLogin() {
         onSuccess: async ({ accessToken }) => {
             setHeader("Authorization", `Bearer ${accessToken}`);
             await saveSecureStore("accessToken", accessToken);
-            const userInfo = await queryClient.fetchQuery({
-                queryKey: ["auth", "getUserInfo"],
+            const userInfo = await queryClient.fetchQuery<User>({
+                queryKey: [queryKeys.AUTH, queryKeys.GET_ME],
                 queryFn: getUserInfo,
             });
 
@@ -66,14 +81,17 @@ function useAuth() {
     const logout = async () => {
         removeHeader("Authorization");
         await deleteSecureStore("accessToken");
-        queryClient.removeQueries({ queryKey: ["auth", "getUserInfo"] });
+        queryClient.removeQueries({ queryKey: [queryKeys.AUTH, queryKeys.GET_ME] });
         router.replace("/auth");
+        Toast.show({
+            type: "success",
+            text1: "로그아웃 되었습니다.",
+        });
     };
 
     return {
         auth: {
             id: data?.id || "",
-            email: data?.email || "",
             nickname: data?.nickname || "",
         },
         isAuthLoading: isPending,

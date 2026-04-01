@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { View } from "react-native";
-import { fn } from "storybook/test";
-import EmailDomainSuggestions from "./EmailDomainSuggestions";
+import EmailDomainSuggestions from "../EmailDomainSuggestions";
 
 const meta = {
   title: "Components/InputField/Modules/EmailDomainSuggestions",
@@ -15,7 +14,7 @@ const meta = {
     ),
   ],
   args: {
-    onSelect: fn(),
+    onSelect: () => {},
     value: "user@g",
   },
 } satisfies Meta<typeof EmailDomainSuggestions>;

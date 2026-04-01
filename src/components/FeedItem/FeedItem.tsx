@@ -1,7 +1,8 @@
 import Profile from "@/components/Profile";
 import { colors } from "@/constants";
+import useAuth from "@/hooks/queries/useAuth";
 import { Post } from "@/types";
-import { Octicons, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -10,7 +11,9 @@ interface FeedItemProps {
 }
 
 function FeedItem({ post }: FeedItemProps) {
-  const isLiked = true;
+  const { auth } = useAuth();
+  const isUsers = post.likes?.map(like => Number(like.userId));
+  const isLiked = isUsers?.includes(Number(auth.id));
 
   return (
     <View style={styles.container}>
@@ -19,7 +22,7 @@ function FeedItem({ post }: FeedItemProps) {
           imageUri={post.author.imageUri}
           nickname={post.author.nickname}
           createdAt={post.createdAt}
-          onPress={() => {}}
+          onPress={() => { }}
         />
         <Text style={styles.title}>{post.title}</Text>
         <Text numberOfLines={3} style={styles.description}>
@@ -34,7 +37,7 @@ function FeedItem({ post }: FeedItemProps) {
             color={isLiked ? colors.ORANGE_600 : colors.BLACK}
           />
           <Text style={isLiked ? styles.activeMenuText : styles.menuText}>
-            1
+            {post.likes?.length || "좋아요"}
           </Text>
         </Pressable>
         <Pressable style={styles.menu}>
@@ -43,11 +46,11 @@ function FeedItem({ post }: FeedItemProps) {
             size={16}
             color={colors.BLACK}
           />
-          <Text style={styles.menuText}>1</Text>
+          <Text style={styles.menuText}>{post.commentCount || "댓글"}</Text>
         </Pressable>
         <Pressable style={styles.menu}>
           <Ionicons name="eye-outline" size={16} color={colors.BLACK} />
-          <Text style={styles.menuText}>1</Text>
+          <Text style={styles.menuText}>{post.viewCount || "조회수"}</Text>
         </Pressable>
       </View>
     </View>

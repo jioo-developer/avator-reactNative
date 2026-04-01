@@ -1,9 +1,9 @@
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import EmailInput from "@/components/InputField/modules/EmailInput";
-import PasswordInput from "@/components/InputField/modules/PasswordInput";
 import useAuth from "@/hooks/queries/useAuth";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
+import EmailInput from "./components/EmailInput";
+import PasswordInput from "./components/PasswordInput";
 
 type FormValues = {
   email: string;
@@ -28,7 +28,16 @@ export default function LoginScreen() {
     <FormProvider {...loginForm}>
       <View style={styles.container}>
         <EmailInput />
-        <PasswordInput />
+        <PasswordInput
+          name="password"
+          label="비밀번호"
+          placeholder="비밀번호를 입력해주세요."
+          rules={{
+            validate: (value: string) => {
+              if (value.length < 8) return "비밀번호는 8자 이상 입력해주세요.";
+            },
+          }}
+        />
       </View>
       <FixedBottomCTA
         label="로그인하기"

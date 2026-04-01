@@ -1,11 +1,10 @@
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import EmailDomainSuggestions from "@/components/InputField/modules/EmailDomainSuggestions";
-import EmailInput from "@/components/InputField/modules/EmailInput";
-import PasswordConfirmInput from "@/components/InputField/modules/PasswordConfirmInput";
-import PasswordInput from "@/components/InputField/modules/PasswordInput";
 import useAuth from "@/hooks/queries/useAuth";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
+import EmailDomainSuggestions from "./components/EmailDomainSuggestions";
+import EmailInput from "./components/EmailInput";
+import PasswordInput from "./components/PasswordInput";
 
 type FormValues = {
   email: string;
@@ -23,7 +22,7 @@ export default function SignupScreen() {
     },
   });
 
-  const emailValue = signupForm.watch("email");
+  const [emailValue, passwordValue] = signupForm.watch(["email", "password"]);
 
   const onSubmit = (formValues: FormValues) => {
     const { email, password } = formValues
@@ -37,11 +36,31 @@ export default function SignupScreen() {
           <EmailInput />
           <EmailDomainSuggestions
             value={emailValue}
-            onSelect={(email) => signupForm.setValue("email", email)}
+            onSelect={(email: string) => signupForm.setValue("email", email)}
           />
         </View>
-        <PasswordInput submitBehavior="submit" />
-        <PasswordConfirmInput />
+        <PasswordInput
+          name="password"
+          label="비밀번호"
+          placeholder="비밀번호를 입력해주세요."
+          submitBehavior="submit"
+          onSubmitEditingFocus="passwordConfirm"
+          rules={{
+            validate: (value: string) => {
+              if (value.length < 8) return "비밀번호는 8자 이상 입력해주세요.";
+            },
+          }}
+        />
+        <PasswordInput
+          name="passwordConfirm"
+          label="비밀번호 확인"
+          placeholder="비밀번호를 입력해주세요."
+          rules={{
+            validate: (value: string) => {
+              if (value !== passwordValue) return "비밀번호가 일치하지 않습니다.";
+            },
+          }}
+        />
       </View>
       <FixedBottomCTA
         label="회원가입하기"

@@ -74,6 +74,11 @@ const styles = StyleSheet.create({
   inputError: {
     backgroundColor: colors.RED_100,
   },
+  multiline: {
+    alignItems: "flex-start",
+    paddingVertical: 10,
+    height: 200
+  },
 });
 
 export default InputField;

@@ -82,14 +82,7 @@ interface Post {
 }
 
 export type {
-  Profile,
-  PostVote,
-  PostVoteOption,
-  CreatePostDto,
-  CreateCommentDto,
-  CreateVoteDto,
-  Post,
-  Comment,
-  ImageUri,
-  VoteOption,
+  Comment, CreateCommentDto, CreatePostDto, CreateVoteDto, ImageUri, Post, PostVote,
+  PostVoteOption, Profile, User, VoteOption
 };
+

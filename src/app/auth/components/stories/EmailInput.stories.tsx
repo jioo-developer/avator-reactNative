@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { View } from "react-native";
-import PasswordConfirmInput from "./PasswordConfirmInput";
-import PasswordInput from "./PasswordInput";
+import EmailInput from "../EmailInput";
 
 type AuthForm = {
   email: string;
@@ -10,24 +9,21 @@ type AuthForm = {
   passwordConfirm: string;
 };
 
-function PasswordConfirmStoryWrapper() {
+function EmailInputStoryWrapper() {
   const methods = useForm<AuthForm>({
     defaultValues: { email: "", password: "", passwordConfirm: "" },
   });
 
   return (
     <FormProvider {...methods}>
-      <View style={{ gap: 16 }}>
-        <PasswordInput />
-        <PasswordConfirmInput />
-      </View>
+      <EmailInput />
     </FormProvider>
   );
 }
 
 const meta = {
-  title: "Components/InputField/Modules/PasswordConfirmInput",
-  component: PasswordConfirmStoryWrapper,
+  title: "Components/InputField/Modules/EmailInput",
+  component: EmailInputStoryWrapper,
   tags: ["autodocs"],
   decorators: [
     (Story) => (
@@ -36,10 +32,10 @@ const meta = {
       </View>
     ),
   ],
-} satisfies Meta<typeof PasswordConfirmStoryWrapper>;
+} satisfies Meta<typeof EmailInputStoryWrapper>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const WithPasswordField: Story = {};
+export const Default: Story = {};
