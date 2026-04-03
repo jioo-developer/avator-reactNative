@@ -17,7 +17,7 @@ function useGetUserInfo() {
     });
 
     useEffect(() => {
-        const syncAuthState = async () => {
+        (async () => {
             if (isError) {
                 removeHeader("Authorization");
                 await deleteSecureStore("accessToken");
@@ -25,16 +25,13 @@ function useGetUserInfo() {
                 return;
             }
 
-            if (!isSuccess) return;
-
-            const accessToken = await getSecureStore("accessToken");
-
-            if (!accessToken) return;
-
-            setHeader("Authorization", `Bearer ${accessToken}`);
-        };
-
-        syncAuthState();
+            if (isSuccess) {
+                const accessToken = await getSecureStore("accessToken");
+                if (accessToken) {
+                    setHeader("Authorization", `Bearer ${accessToken}`);
+                }
+            }
+        })();
     }, [isError, isSuccess]);
 
     return { data, isPending };
@@ -83,10 +80,6 @@ function useAuth() {
         await deleteSecureStore("accessToken");
         queryClient.removeQueries({ queryKey: [queryKeys.AUTH, queryKeys.GET_ME] });
         router.replace("/auth");
-        Toast.show({
-            type: "success",
-            text1: "로그아웃 되었습니다.",
-        });
     };
 
     return {

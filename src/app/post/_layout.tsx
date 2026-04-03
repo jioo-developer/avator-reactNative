@@ -18,6 +18,14 @@ export default function PostLayout() {
                     headerShown: true,
                 }}
             />
+
+            <Stack.Screen
+                name="/update/[id]"
+                options={{
+                    title: "게시글 수정",
+                    headerShown: true,
+                }}
+            />
         </Stack>
     );
 }

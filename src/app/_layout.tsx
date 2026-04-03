@@ -1,13 +1,14 @@
 import queryClient from "@/api/config/queryClient";
 import { SpaceMono_400Regular } from "@expo-google-fonts/space-mono";
+import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { useFonts } from "expo-font";
-import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -29,7 +30,9 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RootNavigator />
+      <ActionSheetProvider>
+        <RootNavigator />
+      </ActionSheetProvider>
       <Toast />
     </QueryClientProvider>
   );

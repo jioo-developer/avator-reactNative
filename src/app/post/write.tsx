@@ -1,7 +1,6 @@
 import FixedBottomCTA from "@/components/FixedBottomCTA";
 import useCreatePost from "@/hooks/queries/useCreatePost";
 import { ImageUri } from "@/types";
-import { useNavigation } from "expo-router";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -15,7 +14,6 @@ type FormValues = {
 }
 
 export default function WriteScreen() {
-    const navigation = useNavigation();
     const createPostMutation = useCreatePost();
 
     const postForm = useForm<FormValues>({

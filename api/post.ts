@@ -1,4 +1,4 @@
-import { CreatePostDto, Post } from "@/types";
+import { CreatePostDto, Post, RequestUpdatePost } from "@/types";
 import axiosInstance from "./config/axios";
 
 async function createPost(body: CreatePostDto) {
@@ -12,5 +12,20 @@ async function getPosts(page: number = 1): Promise<Post[]> {
     return data;
 }
 
-export { createPost, getPosts };
+async function getPost(id: number): Promise<Post> {
+    const { data } = await axiosInstance.get(`/posts/${id}`);
+    return data;
+}
+
+async function updatePost({ id, body }: RequestUpdatePost): Promise<number> {
+    const { data } = await axiosInstance.put(`/posts/${id}`, body);
+    return data;
+}
+
+async function deletePost(id: number) {
+    const { data } = await axiosInstance.delete(`/posts/${id}`);
+    return data;
+}
+
+export { createPost, deletePost, getPost, getPosts, updatePost };
 
