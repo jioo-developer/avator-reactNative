@@ -81,8 +81,13 @@ interface Post {
   comments?: PostComment[];
 }
 
+type RequestUpdatePost = {
+  id: number;
+  body: CreatePostDto;
+}
+
 export type {
   Comment, CreateCommentDto, CreatePostDto, CreateVoteDto, ImageUri, Post, PostVote,
-  PostVoteOption, Profile, User, VoteOption
+  PostVoteOption, Profile, RequestUpdatePost, User, VoteOption
 };
 

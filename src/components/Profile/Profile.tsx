@@ -1,13 +1,29 @@
 import { colors } from "@/constants";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import relativeTime from "dayjs/plugin/relativeTime";
 import React, { ReactNode } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-
 interface ProfileProps {
   onPress: () => void;
   nickname: string;
   imageUri?: string;
   createdAt: string;
   option?: ReactNode;
+}
+
+dayjs.locale("ko");
+dayjs.extend(relativeTime);
+
+function formatCreatedAtRelative(createdAt: string): string {
+  const parsed = dayjs(createdAt);
+  const now = dayjs();
+  const aheadMs = parsed.valueOf() - now.valueOf();
+  const maxSkewMs = 5 * 60 * 1000;
+  if (aheadMs > 0 && aheadMs < maxSkewMs) {
+    return now.fromNow();
+  }
+  return parsed.fromNow();
 }
 
 function Profile({
@@ -24,13 +40,13 @@ function Profile({
           source={
             imageUri
               ? { uri: imageUri }
-              : require("../../../assets/images/default-avatar.png")
+              : require("@/assets/images/default-avatar.png")
           }
           style={styles.avatar}
         />
         <View style={{ gap: 4 }}>
           <Text style={styles.nickname}>{nickname}</Text>
-          <Text style={styles.createdAt}>{createdAt}</Text>
+          <Text style={styles.createdAt}>{formatCreatedAtRelative(createdAt)}</Text>
         </View>
       </Pressable>
       {option}

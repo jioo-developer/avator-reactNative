@@ -42,7 +42,7 @@ function FeedList() {
         <View style={styles.refreshOverlay}>
           <View style={styles.refreshInner}>
             <Image
-              source={require("../../../assets/images/default-avatar.png")}
+              source={require("@/assets/images/default-avatar.png")}
               style={styles.refreshImage}
             />
             <Text style={styles.refreshText}>새로고침 중...</Text>

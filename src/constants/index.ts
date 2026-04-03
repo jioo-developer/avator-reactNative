@@ -5,6 +5,7 @@ const queryKeys = {
     POST: "post",
     GET_ME: "getMe",
     GET_POSTS: "getPosts",
+    GET_POST: "getPost",
 };
 
 export { queryKeys };
