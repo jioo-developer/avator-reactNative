@@ -1,11 +1,13 @@
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import useCreatePost from "@/hooks/queries/useCreatePost";
+import { useGetPost } from "@/hooks/queries/useGetPost";
+import useUpdatePost from "@/hooks/queries/useUpdatePost";
 import { ImageUri } from "@/types";
+import { useLocalSearchParams } from "expo-router";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import DescriptionInput from "./_components/Description";
-import TitleInput from "./_components/TitleInput";
+import TitleInput from "../_components/TitleInput";
+import DescriptionInput from "../_components/Description";
 
 type FormValues = {
     title: string;
@@ -13,19 +15,20 @@ type FormValues = {
     imageUris: ImageUri[];
 }
 
-export default function WriteScreen() {
-    const createPostMutation = useCreatePost();
-
+export default function PostUpdateScreen() {
+    const { id } = useLocalSearchParams<{ id: string }>();
+    const { data: post } = useGetPost(Number(id))
+    const updatePostMutation = useUpdatePost();
     const postForm = useForm<FormValues>({
         defaultValues: {
-            title: "",
-            description: "",
-            imageUris: [],
+            title: post?.title || "",
+            description: post?.description || "",
+            imageUris: post?.imageUris || [],
         },
     });
 
     const onSubmit = (formValues: FormValues) => {
-        createPostMutation.mutate(formValues);
+        updatePostMutation.mutate({ id: Number(id), body: formValues });
     };
     return (
         <FormProvider {...postForm}>

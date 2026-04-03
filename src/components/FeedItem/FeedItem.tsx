@@ -1,28 +1,80 @@
 import Profile from "@/components/Profile";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/useAuth";
+import useDeletePost from "@/hooks/queries/useDeletePost";
 import { Post } from "@/types";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-
 interface FeedItemProps {
   post: Post;
+  isDetail?: boolean;
 }
 
-function FeedItem({ post }: FeedItemProps) {
+function FeedItem({ post, isDetail = false }: FeedItemProps) {
   const { auth } = useAuth();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const { mutate: deletePost } = useDeletePost();
+
   const isUsers = post.likes?.map(like => Number(like.userId));
   const isLiked = isUsers?.includes(Number(auth.id));
 
+  const handlePressOption = () => {
+    const options = ["수정", "삭제", "취소"];
+    const destructiveButtonIndex = 1;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+        tintColor: colors.PRIMARY,
+        cancelButtonTintColor: colors.GRAY_700,
+      },
+      (selectedIndex?: number) => {
+      switch (selectedIndex) {
+        case 0:
+          router.push({ pathname: "/post/update/[id]", params: { id: String(post.id) } });
+          break;
+        case destructiveButtonIndex:
+          deletePost(post.id, {
+            onSuccess: () => {
+              isDetail && router.back();
+            }
+          });
+          break;
+        case cancelButtonIndex:
+          break;
+        default:
+          break;
+      }
+    })
+  };
+
+  const handlePressFeed = () => {
+    if (!isDetail) {
+      router.push({ pathname: "/post/[id]", params: { id: String(post.id) } });
+    }
+  }
+
+  const ContainerComponent = isDetail ? View : Pressable;
+
   return (
-    <View style={styles.container}>
+    <ContainerComponent style={styles.container} onPress={handlePressFeed}>
       <View style={styles.contentContainer}>
         <Profile
+          onPress={() => { }}
           imageUri={post.author.imageUri}
           nickname={post.author.nickname}
           createdAt={post.createdAt}
-          onPress={() => { }}
+          option={
+            auth.id === post.author.id && (
+              <Ionicons name="ellipsis-vertical" size={24} color={colors.BLACK} onPress={handlePressOption} />
+            )
+          }
         />
         <Text style={styles.title}>{post.title}</Text>
         <Text numberOfLines={3} style={styles.description}>
@@ -53,7 +105,7 @@ function FeedItem({ post }: FeedItemProps) {
           <Text style={styles.menuText}>{post.viewCount || "조회수"}</Text>
         </Pressable>
       </View>
-    </View>
+    </ContainerComponent>
   );
 }
 

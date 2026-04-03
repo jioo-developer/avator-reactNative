@@ -2,6 +2,7 @@ const tintLight = '#208AEF';
 const tintDark = '#6eb6ff';
 
 export const colors = {
+  PRIMARY: tintLight,
   WHITE: "#FFF",
   RED_100: "#FFDFDF",
   RED_500: "#FF5F5F",
