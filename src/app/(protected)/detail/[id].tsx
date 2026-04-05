@@ -1,8 +1,7 @@
 import CommentInput, {
   type ReplyParent,
-} from "@/app/post/_comment/CommentInput";
-import CommentItem from "@/app/post/_comment/CommentItem";
-import AuthRoute from "@/components/AuthRoute";
+} from "@/app/(protected)/post/_comment/CommentInput";
+import CommentItem from "@/app/(protected)/post/_comment/CommentItem";
 import FeedItem from "@/components/FeedItem";
 import { colors } from "@/constants";
 import { useGetPost } from "@/hooks/queries/post/usePost";
@@ -49,62 +48,60 @@ export default function PostDetailScreen() {
   }
 
   return (
-    <AuthRoute>
-      <View style={styles.safeArea}>
-        <View style={styles.body}>
-          <KeyboardAwareScrollView
-            innerRef={(ref) => {
-              scrollRef.current = ref;
-            }}
-            style={styles.scroll}
-            contentContainerStyle={styles.awareScrollViewContainer}
-            keyboardShouldPersistTaps="handled"
-            enableOnAndroid
-          >
-            <View>
-              {/* 게시글 */}
-              <FeedItem post={post} isUsedInDetail />
-              {/* 댓글 목록 */}
-              {post.comments!.map((comment) => (
-                <View key={comment.id}>
+    <View style={styles.safeArea}>
+      <View style={styles.body}>
+        <KeyboardAwareScrollView
+          innerRef={(ref) => {
+            scrollRef.current = ref;
+          }}
+          style={styles.scroll}
+          contentContainerStyle={styles.awareScrollViewContainer}
+          keyboardShouldPersistTaps="handled"
+          enableOnAndroid
+        >
+          <View>
+            {/* 게시글 */}
+            <FeedItem post={post} isUsedInDetail />
+            {/* 댓글 목록 */}
+            {post.comments!.map((comment) => (
+              <View key={comment.id}>
+                <CommentItem
+                  comment={comment}
+                  onReply={() =>
+                    setReplyParent({
+                      id: comment.id,
+                      nickname: comment.user.nickname,
+                    })
+                    //  CommentInput에 replyParent로 넘길 "답글 대상" 설정
+                  }
+                />
+                {/* 답글 목록 */}
+                {comment.replies.map((reply) => (
                   <CommentItem
-                    comment={comment}
+                    key={reply.id}
+                    comment={reply}
+                    isReply // 대댓글 여부 표시
                     onReply={() =>
                       setReplyParent({
-                        id: comment.id,
-                        nickname: comment.user.nickname,
+                        id: reply.id,
+                        nickname: reply.user.nickname,
                       })
                       //  CommentInput에 replyParent로 넘길 "답글 대상" 설정
                     }
                   />
-                  {/* 답글 목록 */}
-                  {comment.replies.map((reply) => (
-                    <CommentItem
-                      key={reply.id}
-                      comment={reply}
-                      isReply // 대댓글 여부 표시
-                      onReply={() =>
-                        setReplyParent({
-                          id: reply.id,
-                          nickname: reply.user.nickname,
-                        })
-                        //  CommentInput에 replyParent로 넘길 "답글 대상" 설정
-                      }
-                    />
-                  ))}
-                </View>
-              ))}
-            </View>
-          </KeyboardAwareScrollView>
-          <CommentInput
-            postId={post.id}
-            scrollRef={scrollRef}
-            replyParent={replyParent}
-            onCancelReply={() => setReplyParent(null)}
-          />
-        </View>
+                ))}
+              </View>
+            ))}
+          </View>
+        </KeyboardAwareScrollView>
+        <CommentInput
+          postId={post.id}
+          scrollRef={scrollRef}
+          replyParent={replyParent}
+          onCancelReply={() => setReplyParent(null)}
+        />
       </View>
-    </AuthRoute>
+    </View>
   );
 }
 
