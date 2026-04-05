@@ -14,7 +14,7 @@ export default function PostLayout() {
             }}
         >
             <Stack.Screen
-                name="write"
+                name="index"
                 options={{
                     title: "글쓰기",
                     headerShown: true,

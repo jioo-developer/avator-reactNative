@@ -1,7 +1,7 @@
-import FeedList from "@/components/FeedList";
+import { FeedList } from "@/components";
 import { colors } from "@/constants";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, type Href } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,7 +9,10 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <FeedList />
-      <Pressable style={styles.writeButton} onPress={() => router.push("/post/write")}>
+      <Pressable
+        style={styles.writeButton}
+        onPress={() => router.push("/post" as Href)}
+      >
         <Ionicons name="pencil" size={32} color={colors.WHITE} />
       </Pressable>
     </SafeAreaView>

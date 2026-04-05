@@ -1,4 +1,4 @@
-import FixedBottomCTA from "@/components/FixedBottomCTA";
+import { FixedBottomCTA } from "@/components";
 import { useCreatePost } from "@/hooks/queries/post/usePost";
 import { ImageUri } from "@/types";
 import { FormProvider, useForm } from "react-hook-form";

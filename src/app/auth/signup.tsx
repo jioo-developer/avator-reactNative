@@ -1,4 +1,4 @@
-import FixedBottomCTA from "@/components/FixedBottomCTA";
+import { FixedBottomCTA } from "@/components";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";

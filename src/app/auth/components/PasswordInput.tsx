@@ -1,4 +1,4 @@
-import InputField from "@/components/InputField/InputField";
+import { InputField } from "@/components";
 import React from "react";
 import { Controller, type RegisterOptions, useFormContext } from "react-hook-form";
 import type { TextInputProps } from "react-native";

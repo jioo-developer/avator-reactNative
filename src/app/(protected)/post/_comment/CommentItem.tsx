@@ -1,4 +1,4 @@
-import Profile from "@/components/Profile";
+import { Profile } from "@/components";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { useDeleteComment } from "@/hooks/queries/post/useComment";

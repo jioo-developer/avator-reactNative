@@ -6,7 +6,7 @@ export default function NotFoundScreen() {
     <>
       <Stack.Screen options={{ title: "존재하지 않는 페이지" }} />
       <View style={styles.container}>
-        <Link href="/(tabs)/home" style={styles.link}>
+        <Link href="/" style={styles.link}>
           <Text>홈으로 이동</Text>
         </Link>
       </View>

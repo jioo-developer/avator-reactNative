@@ -1,4 +1,4 @@
-import CustomButton from "@/components/CustomButton";
+import CommonButton from "../CommonButton/CommonButton";
 import { colors } from "@/constants";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -14,7 +14,7 @@ function FixedBottomCTA({ label, onPress }: FixedBottomCTAProps) {
 
   return (
     <View style={[styles.fixed, { paddingBottom: inset.bottom || 12 }]}>
-      <CustomButton label={label} onPress={onPress} />
+      <CommonButton label={label} onPress={onPress} />
     </View>
   );
 }

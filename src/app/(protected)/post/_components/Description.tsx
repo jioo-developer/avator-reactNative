@@ -1,4 +1,4 @@
-import InputField from '@/components/InputField/InputField';
+import { InputField } from "@/components";
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 

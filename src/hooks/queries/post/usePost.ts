@@ -1,7 +1,14 @@
 import queryClient from "@/api/config/queryClient";
 import { createPost, deletePost, getPost, getPosts, updatePost } from "@/api/post";
+import type { Post } from "@/types";
 import { queryKeys } from "@/constants";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+    useInfiniteQuery,
+    useMutation,
+    useQuery,
+    useSuspenseQuery,
+    type UseSuspenseQueryResult,
+} from "@tanstack/react-query";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
@@ -30,6 +37,13 @@ function useGetPost(id: number) {
         queryKey: [queryKeys.POST, queryKeys.GET_POST, id],
         queryFn: () => getPost(Number(id)),
         enabled: Boolean(id),
+    });
+}
+
+function useGetPostSuspense(id: number): UseSuspenseQueryResult<Post, Error> {
+    return useSuspenseQuery({
+        queryKey: [queryKeys.POST, queryKeys.GET_POST, id],
+        queryFn: () => getPost(Number(id)),
     });
 }
 
@@ -66,5 +80,12 @@ function useDeletePost() {
     });
 }
 
-export { useCreatePost, useDeletePost, useGetInfinitePosts, useGetPost, useUpdatePost };
+export {
+    useCreatePost,
+    useDeletePost,
+    useGetInfinitePosts,
+    useGetPost,
+    useGetPostSuspense,
+    useUpdatePost,
+};
 

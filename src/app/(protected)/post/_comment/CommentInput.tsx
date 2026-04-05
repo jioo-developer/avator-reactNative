@@ -1,4 +1,4 @@
-import InputField from "@/components/InputField";
+import { InputField } from "@/components";
 import { colors } from "@/constants";
 import { useCreateComment } from "@/hooks/queries/post/useComment";
 import { Ionicons } from "@expo/vector-icons";

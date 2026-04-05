@@ -1,4 +1,4 @@
-import FeedItem from "@/components/FeedItem";
+import FeedItem from "../FeedItem/FeedItem";
 import { colors } from "@/constants";
 import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
 import { Post } from "@/types";

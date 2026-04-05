@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { View } from "react-native";
 import { fn } from "storybook/test";
-import CustomButton from "./CustomButton";
+import CommonButton from "./CommonButton";
 
 const meta = {
-  title: "Components/CustomButton",
-  component: CustomButton,
+  title: "Components/CommonButton",
+  component: CommonButton,
   tags: ["autodocs"],
   decorators: [
     (Story) => (
@@ -15,7 +15,7 @@ const meta = {
     ),
   ],
   args: { onPress: fn() },
-} satisfies Meta<typeof CustomButton>;
+} satisfies Meta<typeof CommonButton>;
 
 export default meta;
 

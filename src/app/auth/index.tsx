@@ -1,4 +1,4 @@
-import CustomButton from "@/components/CustomButton";
+import { CommonButton } from "@/components";
 import { Link, router } from "expo-router";
 import { Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,7 +13,7 @@ export default function AuthScreen() {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <CustomButton
+        <CommonButton
           label="이메일 로그인"
           onPress={() => router.push("/auth/login")}
         />

@@ -1,4 +1,4 @@
-import FixedBottomCTA from "@/components/FixedBottomCTA";
+import { FixedBottomCTA } from "@/components";
 import { useGetPost, useUpdatePost } from "@/hooks/queries/post/usePost";
 import { ImageUri } from "@/types";
 import { useLocalSearchParams } from "expo-router";
