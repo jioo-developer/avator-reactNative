@@ -1,5 +1,5 @@
 import { CreateCommentDto } from "@/types";
-import axiosInstance from "./config/axios";
+import axiosInstance from "./config/axiosInstance";
 
 async function createComment(body: CreateCommentDto) {
     const { data } = await axiosInstance.post("/comments", body);

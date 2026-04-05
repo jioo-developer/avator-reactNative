@@ -1,4 +1,4 @@
-import axiosInstance from "@/api/config/axios";
+import axiosInstance from "@/api/config/axiosInstance";
 import { getSecureStore } from "@/utils/secureStore";
 
 type RequestUser = {

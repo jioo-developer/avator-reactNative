@@ -1,6 +1,6 @@
-import React, { ReactNode, useCallback } from "react";
-import useAuth from "@/hooks/queries/useAuth";
+import useAuth from "@/hooks/queries/auth/useAuth";
 import { router, useFocusEffect } from "expo-router";
+import React, { ReactNode, useCallback } from "react";
 
 interface AuthRouteProps {
   children: ReactNode;

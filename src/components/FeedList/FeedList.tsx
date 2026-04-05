@@ -1,6 +1,6 @@
 import FeedItem from "@/components/FeedItem";
 import { colors } from "@/constants";
-import useGetInfinitePosts from "@/hooks/queries/useGetInfinitePosts";
+import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
 import { Post } from "@/types";
 import { useScrollToTop } from "@react-navigation/native";
 import React, { useRef } from "react";

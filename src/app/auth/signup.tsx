@@ -1,5 +1,5 @@
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import useAuth from "@/hooks/queries/useAuth";
+import useAuth from "@/hooks/queries/auth/useAuth";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 import EmailDomainSuggestions from "./components/EmailDomainSuggestions";
@@ -37,6 +37,7 @@ export default function SignupScreen() {
           <EmailDomainSuggestions
             value={emailValue}
             onSelect={(email: string) => signupForm.setValue("email", email)}
+          // 여기서 email parameter는 자식에서 오는 값
           />
         </View>
         <PasswordInput

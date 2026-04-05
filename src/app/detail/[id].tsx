@@ -1,22 +1,37 @@
-import CommentItem from "@/app/post/_components/CommentItem";
-import PostCommentInput, {
-  type ReplyTarget,
-} from "@/app/post/_components/PostCommentInput";
+import CommentInput, {
+  type ReplyParent,
+} from "@/app/post/_comment/CommentInput";
+import CommentItem from "@/app/post/_comment/CommentItem";
 import AuthRoute from "@/components/AuthRoute";
 import FeedItem from "@/components/FeedItem";
 import { colors } from "@/constants";
-import { useGetPost } from "@/hooks/queries/useGetPost";
-import { useLocalSearchParams } from "expo-router";
-import { useRef, useState } from "react";
+import { useGetPost } from "@/hooks/queries/post/usePost";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useLayoutEffect, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PostDetailScreen() {
+  const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: post, isPending, isError } = useGetPost(Number(id));
   const scrollRef = useRef<ScrollView | null>(null);
-  const [replyTo, setReplyTo] = useState<ReplyTarget | null>(null);
+  // 댓글 등록 성공 시 scrollToEnd로 목록 맨 아래(새 글 위치)로 스크롤
+  const [replyParent, setReplyParent] = useState<ReplyParent | null>(null); // 댓글 답변 대상
+
+  useLayoutEffect(() => {
+    if (post?.title) {
+      navigation.setOptions({ title: post.title });
+      return;
+    }
+
+    if (!isPending && (isError || !post)) {
+      navigation.setOptions({ title: "" });
+      return;
+    }
+
+    navigation.setOptions({ title: "" });
+  }, [navigation, post, isPending, isError]);
 
   if (isPending) {
     return (
@@ -35,11 +50,11 @@ export default function PostDetailScreen() {
 
   return (
     <AuthRoute>
-      <SafeAreaView style={styles.safeArea} edges={["top"]}>
+      <View style={styles.safeArea}>
         <View style={styles.body}>
           <KeyboardAwareScrollView
-            innerRef={(r) => {
-              scrollRef.current = r;
+            innerRef={(ref) => {
+              scrollRef.current = ref;
             }}
             style={styles.scroll}
             contentContainerStyle={styles.awareScrollViewContainer}
@@ -47,29 +62,33 @@ export default function PostDetailScreen() {
             enableOnAndroid
           >
             <View>
-              <FeedItem post={post} isDetail />
-              <Text style={styles.commentCount}>댓글 {post.commentCount}개</Text>
+              {/* 게시글 */}
+              <FeedItem post={post} isUsedInDetail />
+              {/* 댓글 목록 */}
               {post.comments!.map((comment) => (
                 <View key={comment.id}>
                   <CommentItem
                     comment={comment}
                     onReply={() =>
-                      setReplyTo({
+                      setReplyParent({
                         id: comment.id,
                         nickname: comment.user.nickname,
                       })
+                      //  CommentInput에 replyParent로 넘길 "답글 대상" 설정
                     }
                   />
+                  {/* 답글 목록 */}
                   {comment.replies.map((reply) => (
                     <CommentItem
                       key={reply.id}
                       comment={reply}
-                      isReply
+                      isReply // 대댓글 여부 표시
                       onReply={() =>
-                        setReplyTo({
+                        setReplyParent({
                           id: reply.id,
                           nickname: reply.user.nickname,
                         })
+                        //  CommentInput에 replyParent로 넘길 "답글 대상" 설정
                       }
                     />
                   ))}
@@ -77,14 +96,14 @@ export default function PostDetailScreen() {
               ))}
             </View>
           </KeyboardAwareScrollView>
-          <PostCommentInput
+          <CommentInput
             postId={post.id}
             scrollRef={scrollRef}
-            replyTo={replyTo}
-            onDismissReply={() => setReplyTo(null)}
+            replyParent={replyParent}
+            onCancelReply={() => setReplyParent(null)}
           />
         </View>
-      </SafeAreaView>
+      </View>
     </AuthRoute>
   );
 }

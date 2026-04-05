@@ -29,31 +29,6 @@ export default function PostLayout() {
             />
 
             <Stack.Screen
-                name="[id]"
-                options={{
-                    title: "",
-                    headerShown: true,
-                    headerLeft: () => (
-                        <Pressable
-                            onPress={() => {
-                                if (router.canGoBack()) {
-                                    router.back();
-                                } else {
-                                    router.replace("/(tabs)/home");
-                                }
-                            }}
-                        >
-                            <Feather
-                                name="arrow-left"
-                                size={24}
-                                color={colors.BLACK}
-                            />
-                        </Pressable>
-                    ),
-                }}
-            />
-
-            <Stack.Screen
                 name="update/[id]"
                 options={{
                     title: "게시글 수정",

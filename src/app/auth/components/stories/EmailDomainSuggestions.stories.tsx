@@ -14,7 +14,7 @@ const meta = {
     ),
   ],
   args: {
-    onSelect: () => {},
+    onSelect: () => { },
     value: "user@g",
   },
 } satisfies Meta<typeof EmailDomainSuggestions>;
@@ -37,11 +37,4 @@ export const HiddenWhenDomainComplete: Story = {
 
 export const HiddenWithoutAt: Story = {
   args: { value: "useronly" },
-};
-
-export const CustomDomains: Story = {
-  args: {
-    value: "test@ex",
-    domains: ["example.com", "example.org"] as const,
-  },
 };

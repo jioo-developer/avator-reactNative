@@ -1,5 +1,5 @@
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import useCreatePost from "@/hooks/queries/useCreatePost";
+import { useCreatePost } from "@/hooks/queries/post/usePost";
 import { ImageUri } from "@/types";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet } from "react-native";

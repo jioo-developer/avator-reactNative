@@ -1,30 +1,28 @@
 import Profile from "@/components/Profile";
 import { colors } from "@/constants";
-import useAuth from "@/hooks/queries/useAuth";
-import useDeleteComment from "@/hooks/queries/useDeleteComment";
+import useAuth from "@/hooks/queries/auth/useAuth";
+import { useDeleteComment } from "@/hooks/queries/post/useComment";
 import { Comment } from "@/types";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const AVATAR = 50;
-const AVATAR_GAP = 8;
-const TEXT_INSET = AVATAR + AVATAR_GAP;
-const REPLY_RAIL = 3;
-const REPLY_GAP = 10;
-
 interface CommentItemProps {
   comment: Comment;
+  /** true면 답글 행(들여쓰기·아이콘·여백). 상세 화면에서 `comment.replies`를 map할 때만 넘김. */
   isReply?: boolean;
+  /** "답글 남기기" 탭 시 호출. 보통 부모(예: `detail/[id]`)가 `setReplyParent`로 입력창 대상(comment id·닉네임)을 설정 → `CommentInput`의 `replyParent`로 전달됨. */
   onReply?: () => void;
 }
 
-function CommentItem({ comment, isReply = false, onReply }: CommentItemProps) {
+function CommentItem({
+  comment,
+  isReply = false,
+  onReply,
+}: CommentItemProps) {
   const { auth } = useAuth();
   const { showActionSheetWithOptions } = useActionSheet();
   const deleteComment = useDeleteComment();
-
-  const bodyInset = (isReply ? REPLY_RAIL + REPLY_GAP : 0) + TEXT_INSET;
 
   const handlePressOption = () => {
     const options = ["삭제", "취소"];
@@ -52,10 +50,19 @@ function CommentItem({ comment, isReply = false, onReply }: CommentItemProps) {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        {isReply ? <View style={styles.replyRail} /> : null}
+        {/* isReply: 답글임을 시각적으로 구분 */}
+        {isReply ? (
+          <View style={styles.replyMarker} accessibilityLabel="답글">
+            <Ionicons
+              name="return-down-forward-outline"
+              size={20}
+              color={colors.GRAY_500}
+            />
+          </View>
+        ) : null}
         <View style={styles.profileWrap}>
           <Profile
-            onPress={() => {}}
+            onPress={() => { }}
             imageUri={comment.isDeleted ? "" : comment.user.imageUri}
             nickname={comment.isDeleted ? "(삭제)" : comment.user.nickname}
             createdAt={comment.createdAt}
@@ -72,19 +79,24 @@ function CommentItem({ comment, isReply = false, onReply }: CommentItemProps) {
       <Text
         style={[
           styles.body,
-          { marginLeft: bodyInset },
+          isReply && styles.bodyReply,
           comment.isDeleted && styles.bodyDeleted,
         ]}
       >
         {displayBody}
       </Text>
+      {/* onReply 있을 때만 답글 액션 노출; 콜백은 상세 화면이 replyParent 상태를 갱신 */}
       {!comment.isDeleted && onReply ? (
         <Pressable
           onPress={onReply}
           hitSlop={8}
-          style={[styles.replyAction, { marginLeft: bodyInset }]}
+          style={[
+            styles.replyAction,
+            styles.replyActionFirst,
+            isReply && styles.replyActionFirstReply,
+          ]}
         >
-          <Text style={styles.replyActionLabel}>답글</Text>
+          <Text style={styles.replyActionLabel}>답글 남기기</Text>
         </Pressable>
       ) : null}
     </View>
@@ -104,15 +116,13 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: REPLY_GAP,
+    gap: 10,
   },
-  replyRail: {
-    width: REPLY_RAIL,
-    marginTop: 10,
-    alignSelf: "stretch",
-    minHeight: 36,
-    borderRadius: 2,
-    backgroundColor: colors.GRAY_200,
+  replyMarker: {
+    width: 22,
+    marginTop: 12,
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   profileWrap: {
     flex: 1,
@@ -120,9 +130,13 @@ const styles = StyleSheet.create({
   },
   body: {
     marginTop: 6,
+    marginLeft: 58,
     fontSize: 15,
     lineHeight: 22,
     color: colors.BLACK,
+  },
+  bodyReply: {
+    marginLeft: 90,
   },
   bodyDeleted: {
     color: colors.GRAY_500,
@@ -131,9 +145,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     alignSelf: "flex-start",
   },
+  replyActionFirst: {
+    marginLeft: 58,
+  },
+  replyActionFirstReply: {
+    marginLeft: 90,
+  },
   replyActionLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: colors.GRAY_600,
+    color: colors.ORANGE_600,
   },
 });

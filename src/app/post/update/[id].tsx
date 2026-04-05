@@ -1,13 +1,12 @@
 import FixedBottomCTA from "@/components/FixedBottomCTA";
-import { useGetPost } from "@/hooks/queries/useGetPost";
-import useUpdatePost from "@/hooks/queries/useUpdatePost";
+import { useGetPost, useUpdatePost } from "@/hooks/queries/post/usePost";
 import { ImageUri } from "@/types";
 import { useLocalSearchParams } from "expo-router";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import TitleInput from "../_components/TitleInput";
 import DescriptionInput from "../_components/Description";
+import TitleInput from "../_components/TitleInput";
 
 type FormValues = {
     title: string;

@@ -1,23 +1,17 @@
 import FeedList from "@/components/FeedList";
 import { colors } from "@/constants";
-import useAuth from "@/hooks/queries/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
-  const { auth } = useAuth();
   return (
     <SafeAreaView style={styles.container}>
       <FeedList />
-      {
-        auth.id && (
-          <Pressable style={styles.writeButton} onPress={() => router.push("/post/write")}>
-            <Ionicons name="pencil" size={32} color={colors.WHITE} />
-          </Pressable>
-        )
-      }
+      <Pressable style={styles.writeButton} onPress={() => router.push("/post/write")}>
+        <Ionicons name="pencil" size={32} color={colors.WHITE} />
+      </Pressable>
     </SafeAreaView>
   );
 }

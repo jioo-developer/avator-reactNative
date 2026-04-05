@@ -1,6 +1,5 @@
 import { colors } from "@/constants";
-import Foundation from "@expo/vector-icons/Foundation";
-import { Link, Stack } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function AuthLayout() {
   return (
@@ -15,13 +14,8 @@ export default function AuthLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "",
-          headerShown: true,
-          headerTitle: () => (
-            <Link href="/(tabs)/home" replace>
-              <Foundation name="home" size={28} color={"black"} />
-            </Link>
-          ),
+          title: "로그인/회원가입 페이지",
+          headerShown: false,
         }}
       />
       <Stack.Screen
