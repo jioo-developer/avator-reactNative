@@ -18,9 +18,10 @@ export default function PostLayout() {
                 options={{
                     title: "글쓰기",
                     headerShown: true,
+                    headerTitleAlign: "center",
                     headerLeft: () => (
                         <Pressable
-                            onPress={() => router.replace("/(tabs)/home")}
+                            onPress={() => router.replace("/(protected)/(tabs)/home")}
                         >
                             <Feather name="arrow-left" size={24} color={colors.BLACK} />
                         </Pressable>
@@ -31,7 +32,7 @@ export default function PostLayout() {
             <Stack.Screen
                 name="update/[id]"
                 options={{
-                    title: "게시글 수정",
+                    headerTitleAlign: "center",
                     headerShown: true,
                 }}
             />

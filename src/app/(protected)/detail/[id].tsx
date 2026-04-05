@@ -1,11 +1,11 @@
 import Content from "./content";
-import { PageErrorFallback } from "@/components";
+import { PageErrorFallback, RefetchingOverlay } from "@/components";
 import { colors } from "@/constants";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function PostDetailScreen() {
   const { id: idParam } = useLocalSearchParams<{ id: string }>();
@@ -32,8 +32,8 @@ export default function PostDetailScreen() {
       >
         <Suspense
           fallback={
-            <View style={styles.centered}>
-              <ActivityIndicator size="large" color={colors.ORANGE_600} />
+            <View style={styles.suspenseFallback}>
+              <RefetchingOverlay />
             </View>
           }
         >
@@ -45,6 +45,9 @@ export default function PostDetailScreen() {
 }
 
 const styles = StyleSheet.create({
+  suspenseFallback: {
+    flex: 1,
+  },
   centered: {
     flex: 1,
     alignItems: "center",

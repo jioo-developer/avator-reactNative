@@ -71,7 +71,7 @@ function CommentItem({
                 <Pressable onPress={handlePressOption} hitSlop={8}>
                   <Ionicons name="ellipsis-vertical" size={22} color={colors.BLACK} />
                 </Pressable>
-              ) : undefined
+              ) : null
             }
           />
         </View>

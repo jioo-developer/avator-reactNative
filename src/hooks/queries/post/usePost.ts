@@ -1,7 +1,7 @@
 import queryClient from "@/api/config/queryClient";
 import { createPost, deletePost, getPost, getPosts, updatePost } from "@/api/post";
-import type { Post } from "@/types";
 import { queryKeys } from "@/constants";
+import type { Post } from "@/types";
 import {
     useInfiniteQuery,
     useMutation,
@@ -16,7 +16,7 @@ function useCreatePost() {
     return useMutation({
         mutationFn: createPost,
         onSuccess: () => {
-            router.replace("/(tabs)/home");
+            router.replace("/(protected)/(tabs)/home");
             queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
             Toast.show({
                 type: "success",
@@ -86,6 +86,6 @@ export {
     useGetInfinitePosts,
     useGetPost,
     useGetPostSuspense,
-    useUpdatePost,
+    useUpdatePost
 };
 

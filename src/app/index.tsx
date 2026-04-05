@@ -12,5 +12,5 @@ export default function Page() {
     return <Redirect href="/auth" />;
   }
 
-  return <Redirect href="/(tabs)/home" />;
+  return <Redirect href="/(protected)/(tabs)/home" />;
 }

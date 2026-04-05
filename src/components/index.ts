@@ -7,3 +7,4 @@ export { HapticTab } from "./HapticTab/HapticTab";
 export { default as InputField } from "./InputField/InputField";
 export { PageErrorFallback } from "./PageErrorFallback";
 export { default as Profile } from "./Profile/Profile";
+export { default as RefetchingOverlay } from "./RefetchingOverlay/RefetchingOverlay";

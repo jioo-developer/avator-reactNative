@@ -39,7 +39,7 @@ function useLogin() {
                 type: "success",
                 text1: `${userInfo.nickname}님 환영합니다.`,
             });
-            router.replace("/(tabs)/home");
+            router.replace("/(protected)/(tabs)/home");
         },
         onError: () => {
             Alert.alert("로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요.");

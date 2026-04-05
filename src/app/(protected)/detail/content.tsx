@@ -1,7 +1,7 @@
+import CommentItem from "@/app/(protected)/post/_reply";
 import CommentInput, {
   type ReplyParent,
-} from "@/app/(protected)/post/_comment/CommentInput";
-import CommentItem from "@/app/(protected)/post/_comment/CommentItem";
+} from "@/app/(protected)/post/_reply/replyInput";
 import { FeedItem } from "@/components";
 import { colors } from "@/constants";
 import { useGetPostSuspense } from "@/hooks/queries/post/usePost";
@@ -36,8 +36,10 @@ export default function Content({ postId }: ContentProps) {
           keyboardShouldPersistTaps="handled"
           enableOnAndroid
         >
-          <View>
+          <View style={styles.wrapper}>
+            {/* 게시글 컴포넌트 */}
             <FeedItem post={post} isUsedInDetail />
+            {/* 댓글 컴포넌트 */}
             {post.comments!.map((comment) => (
               <View key={comment.id}>
                 <CommentItem
@@ -47,18 +49,21 @@ export default function Content({ postId }: ContentProps) {
                       id: comment.id,
                       nickname: comment.user.nickname,
                     })
+                    // 답글 남기기 클릭 시 답글 입력창 대상 설정
                   }
                 />
+                {/* 답글 컴포넌트 */}
                 {comment.replies.map((reply) => (
                   <CommentItem
                     key={reply.id}
                     comment={reply}
-                    isReply
+                    isReply // 대댓글임을 시각적으로 구분
                     onReply={() =>
                       setReplyParent({
                         id: reply.id,
                         nickname: reply.user.nickname,
                       })
+                      // 답글 남기기 클릭 시 답글 입력창 대상 설정
                     }
                   />
                 ))}
@@ -66,6 +71,7 @@ export default function Content({ postId }: ContentProps) {
             ))}
           </View>
         </KeyboardAwareScrollView>
+        {/* 댓글 입력창 컴포넌트 */}
         <CommentInput
           postId={post.id}
           scrollRef={scrollRef}
@@ -81,6 +87,8 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.GRAY_200,
+  },
+  wrapper: {
   },
   body: {
     flex: 1,

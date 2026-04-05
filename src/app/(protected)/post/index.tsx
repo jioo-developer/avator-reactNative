@@ -27,6 +27,7 @@ export default function WriteScreen() {
     const onSubmit = (formValues: FormValues) => {
         createPostMutation.mutate(formValues);
     };
+
     return (
         <FormProvider {...postForm}>
             <KeyboardAwareScrollView contentContainerStyle={styles.container}>

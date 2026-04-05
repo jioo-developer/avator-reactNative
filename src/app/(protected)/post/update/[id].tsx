@@ -1,7 +1,8 @@
 import { FixedBottomCTA } from "@/components";
 import { useGetPost, useUpdatePost } from "@/hooks/queries/post/usePost";
 import { ImageUri } from "@/types";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useLayoutEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -15,9 +16,17 @@ type FormValues = {
 }
 
 export default function PostUpdateScreen() {
+    const navigation = useNavigation();
     const { id } = useLocalSearchParams<{ id: string }>();
     const { data: post } = useGetPost(Number(id))
     const updatePostMutation = useUpdatePost();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: post?.title ?? "게시글 수정",
+        });
+    }, [navigation, post?.title]);
+
     const postForm = useForm<FormValues>({
         defaultValues: {
             title: post?.title || "",
@@ -29,6 +38,7 @@ export default function PostUpdateScreen() {
     const onSubmit = (formValues: FormValues) => {
         updatePostMutation.mutate({ id: Number(id), body: formValues });
     };
+
     return (
         <FormProvider {...postForm}>
             <KeyboardAwareScrollView contentContainerStyle={styles.container}>

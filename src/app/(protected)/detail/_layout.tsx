@@ -25,7 +25,7 @@ export default function DetailLayout() {
                 if (router.canGoBack()) {
                   router.back();
                 } else {
-                  router.replace("/(tabs)/home");
+                  router.replace("/(protected)/(tabs)/home");
                 }
               }}
             >
