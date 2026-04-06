@@ -73,7 +73,7 @@ function FeedItem({ post, isUsedInDetail = false }: FeedItemProps) {
           nickname={post.author.nickname}
           createdAt={post.createdAt}
           option={
-            auth.id === post.author.id && (
+            isUsedInDetail && auth.id === post.author.id && (
               <Ionicons name="ellipsis-vertical" size={24} color={colors.BLACK} onPress={handlePressOption} />
             )
           }

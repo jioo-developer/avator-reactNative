@@ -58,6 +58,7 @@ interface Comment {
   createdAt: string;
   user: User;
   isDeleted: boolean;
+  likes?: { userId: number | null }[];
 }
 
 interface PostComment extends Comment {

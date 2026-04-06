@@ -3,7 +3,7 @@ import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
 import { Post } from "@/types";
 import { useScrollToTop } from "@react-navigation/native";
 import React, { useRef } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import FeedItem from "../FeedItem/FeedItem";
 import RefetchingOverlay from "../RefetchingOverlay/RefetchingOverlay";
 
@@ -20,6 +20,9 @@ function FeedList() {
   const ref = useRef<FlatList | null>(null);
   useScrollToTop(ref)
 
+  const feedData = posts?.pages.flat() ?? [];
+  const isEmpty = feedData.length === 0;
+
   const handleEndReached = () => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   };
@@ -29,10 +32,22 @@ function FeedList() {
     <View style={styles.container}>
       <FlatList
         ref={ref}
-        data={posts?.pages.flat()}
+        data={feedData}
         renderItem={({ item }) => <FeedItem post={item} />}
         keyExtractor={(item: Post) => String(item.id)}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[
+          styles.contentContainer,
+          isEmpty && styles.emptyContentContainer,
+        ]}
+        ListEmptyComponent={
+          <View style={styles.emptyWrap}>
+            <Image
+              source={require("@/assets/images/default-avatar.png")}
+              style={styles.emptyAvatar}
+            />
+            <Text style={styles.emptyText}>게시글이 없습니다</Text>
+          </View>
+        }
         onEndReached={handleEndReached}
         onEndReachedThreshold={0.5}
         refreshing={isRefetching}
@@ -52,6 +67,26 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: colors.GRAY_200,
     gap: 12,
+  },
+  emptyContentContainer: {
+    flexGrow: 1,
+  },
+  emptyWrap: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+    gap: 12,
+  },
+  emptyAvatar: {
+    width: 120,
+    height: 120,
+    resizeMode: "contain",
+  },
+  emptyText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.GRAY_700,
   },
 });
 
