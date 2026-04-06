@@ -9,14 +9,14 @@ import { useEffect } from "react";
 export async function setClearAuth() {
     removeHeader("Authorization");
     await deleteSecureStore("accessToken");
-    queryClient.removeQueries({ queryKey: [queryKeys.AUTH, queryKeys.GET_ME] });
+    queryClient.removeQueries({ queryKey: queryKeys.AUTH.ME() });
 }
 
 // 유저 정보 조회
 export function useGetUserInfo() {
     const { data, isSuccess, isError, isPending } = useQuery({
         queryFn: getUserInfo,
-        queryKey: [queryKeys.AUTH, queryKeys.GET_ME],
+        queryKey: queryKeys.AUTH.ME(),
     });
 
     useEffect(() => {

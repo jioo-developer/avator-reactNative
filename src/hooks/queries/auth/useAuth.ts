@@ -30,7 +30,7 @@ function useLogin() {
             await saveSecureStore("accessToken", accessToken);
             // 유저 정보 조회
             const userInfo = await queryClient.fetchQuery<User>({
-                queryKey: [queryKeys.AUTH, queryKeys.GET_ME],
+                queryKey: queryKeys.AUTH.ME(),
                 queryFn: getUserInfo,
             });
 

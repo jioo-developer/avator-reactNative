@@ -16,7 +16,7 @@ function useCreatePost() {
         mutationFn: createPost,
         onSuccess: () => {
             router.replace("/(protected)/(tabs)/home");
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
             Toast.show({
                 type: "success",
                 text1: "게시글이 생성되었습니다.",
@@ -33,7 +33,7 @@ function useCreatePost() {
 
 function useGetPostSuspense(id: number): UseSuspenseQueryResult<Post, Error> {
     return useSuspenseQuery({
-        queryKey: [queryKeys.POST, queryKeys.GET_POST, id],
+        queryKey: queryKeys.POST.DETAIL(id),
         queryFn: () => getPost(Number(id)),
         staleTime: 0,
         refetchOnMount: "always",
@@ -42,7 +42,7 @@ function useGetPostSuspense(id: number): UseSuspenseQueryResult<Post, Error> {
 
 function useGetInfinitePosts() {
     return useInfiniteQuery({
-        queryKey: [queryKeys.POST, queryKeys.GET_POSTS],
+        queryKey: queryKeys.POST.LIST(),
         queryFn: ({ pageParam }) => getPosts(pageParam),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
@@ -56,8 +56,8 @@ function useUpdatePost() {
     return useMutation({
         mutationFn: updatePost,
         onSuccess: (postId) => {
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.DETAIL(postId) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
             router.back();
         },
     });
@@ -68,7 +68,7 @@ function useDeletePost() {
     return useMutation({
         mutationFn: deletePost,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
         },
     });
 }
@@ -77,7 +77,7 @@ function useIncreasePostView() {
     return useMutation({
         mutationFn: (postId: number) => increasePostView(postId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
         },
     });
 }

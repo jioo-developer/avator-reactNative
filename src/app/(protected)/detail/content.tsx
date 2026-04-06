@@ -1,43 +1,22 @@
-import queryClient from "@/api/config/queryClient";
 import CommentItem from "@/app/(protected)/post/_reply";
 import CommentInput, { ReplyParent } from "@/app/(protected)/post/_reply/input";
 import { FeedItem } from "@/components";
-import { colors, POSTS_QUERY_KEY } from "@/constants";
+import { colors } from "@/constants";
 import { useGetPostSuspense } from "@/hooks/queries/post/usePost";
 import { usePostDetailViewCount } from "@/hooks/queries/post/useViewCount";
-import type { Post } from "@/types";
-import type { InfiniteData } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function Content({ postId }: { postId: number }) {
   const navigation = useNavigation();
   const { data: post } = useGetPostSuspense(postId);
-  console.log(post.commentCount);
   const scrollRef = useRef<ScrollView | null>(null);
   const [replyParent, setReplyParent] = useState<ReplyParent | null>(null);
   const comments = post.comments ?? [];
 
   usePostDetailViewCount(postId);
-
-  useEffect(() => {
-    queryClient.setQueryData<InfiniteData<Post[]>>(POSTS_QUERY_KEY, (prev) => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        pages: prev.pages.map((posts) =>
-          posts.map((feedPost) =>
-            feedPost.id === postId
-              ? { ...feedPost, commentCount: post.commentCount }
-              : feedPost
-          )
-        ),
-      };
-    });
-  }, [postId, post.commentCount]);
-
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: post.title });
@@ -64,6 +43,7 @@ export default function Content({ postId }: { postId: number }) {
                 {!comment.isDeleted ? (
                   <CommentItem
                     comment={comment}
+                    postId={postId}
                     onReply={() =>
                       setReplyParent({
                         id: comment.id,
@@ -80,6 +60,7 @@ export default function Content({ postId }: { postId: number }) {
                     <CommentItem
                       key={reply.id}
                       comment={reply}
+                      postId={postId}
                       isReply // 대댓글임을 시각적으로 구분
                       onReply={() =>
                         setReplyParent({

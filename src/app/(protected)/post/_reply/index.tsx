@@ -10,12 +10,14 @@ import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
 
 interface CommentItemProps {
   comment: Comment;
+  postId: number;
   isReply?: boolean; // 답글임을 시각적으로 구분
   onReply?: () => void; // 답글 남기기 탭 시 호출
 }
 
 function CommentItem({
   comment,
+  postId,
   isReply = false,
   onReply,
 }: CommentItemProps) {
@@ -52,7 +54,7 @@ function CommentItem({
             setIsEditing(true);
             break;
           case destructiveButtonIndex:
-            deleteComment.mutate(comment.id);
+            deleteComment.mutate({ commentId: comment.id, postId });
             break;
           case cancelButtonIndex:
             break;
@@ -93,7 +95,7 @@ function CommentItem({
                 <Pressable
                   accessibilityRole="button"
                   disabled={!canLike || toggleLike.isPending}
-                  onPress={() => toggleLike.mutate(comment.id)}
+                  onPress={() => toggleLike.mutate({ commentId: comment.id, postId })}
                   hitSlop={8}
                   style={({ pressed }) => [
                     styles.likeBtn,
@@ -133,7 +135,7 @@ function CommentItem({
             onSubmitEditing={() => {
               if (!canSubmitEdit) return;
               updateComment.mutate(
-                { id: comment.id, content: trimmedEditText },
+                { id: comment.id, content: trimmedEditText, postId },
                 {
                   onSuccess: () => {
                     Keyboard.dismiss();
@@ -162,7 +164,7 @@ function CommentItem({
               onPress={() => {
                 if (!canSubmitEdit) return;
                 updateComment.mutate(
-                  { id: comment.id, content: trimmedEditText },
+                  { id: comment.id, content: trimmedEditText, postId },
                   {
                     onSuccess: () => {
                       Keyboard.dismiss();

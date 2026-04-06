@@ -1,5 +1,5 @@
 import queryClient from "@/api/config/queryClient";
-import { POSTS_QUERY_KEY, queryKeys } from "@/constants";
+import { queryKeys } from "@/constants";
 import { useIncreasePostView } from "@/hooks/queries/post/usePost";
 import type { Post } from "@/types";
 import type { InfiniteData } from "@tanstack/react-query";
@@ -7,8 +7,7 @@ import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef } from "react";
 
 // "게시글 상세" 쿼리에서 사용할 queryKey를 만드는 유틸
-const getPostQueryKey = (postId: number) =>
-  [queryKeys.POST, queryKeys.GET_POST, postId] as const;
+const getPostQueryKey = (postId: number) => queryKeys.POST.DETAIL(postId);
 
 /**
  * - 서버가 viewCount를 내려주면: 그 값을 그대로 사용 (가장 정확)
@@ -59,7 +58,7 @@ export function usePostDetailViewCount(postId: number) {
 
           // 2) "피드 목록(무한 스크롤)" 캐시에서도 동일 게시글의 조회수를 함께 맞춤
           queryClient.setQueryData<InfiniteData<Post[]>>(
-            POSTS_QUERY_KEY,
+            queryKeys.POST.LIST(),
             (prev) => {
               if (!prev) return prev;
               return {
@@ -103,7 +102,7 @@ export function usePostDetailViewCount(postId: number) {
       });
       // 피드 목록 캐시 무효화 → 목록으로 돌아갔을 때 변경된 조회수 반영
       queryClient.invalidateQueries({
-        queryKey: POSTS_QUERY_KEY,
+        queryKey: queryKeys.POST.LIST(),
       });
     };
   }, [postId]);

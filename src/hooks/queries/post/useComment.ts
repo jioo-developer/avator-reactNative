@@ -3,40 +3,43 @@ import queryClient from "@/api/config/queryClient";
 import { queryKeys } from "@/constants";
 import { useMutation } from "@tanstack/react-query";
 
+const postKey = (postId: number) => queryKeys.POST.DETAIL(postId);
+
 const useCreateComment = () => {
     return useMutation({
         mutationFn: createComment,
-        onSuccess: (postId: number) => {
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: postKey(variables.postId) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
         },
     });
 }
 
 const useUpdateComment = () => {
     return useMutation({
-        mutationFn: updateComment,
-        onSuccess: (postId: number) => {
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
+        mutationFn: ({ id, content }: { id: number; content: string; postId: number }) =>
+            updateComment({ id, content }),
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: postKey(variables.postId) });
         },
     });
 }
 
 const useDeleteComment = () => {
     return useMutation({
-        mutationFn: deleteComment,
-        onSuccess: (postId: number) => {
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
+        mutationFn: ({ commentId }: { commentId: number; postId: number }) => deleteComment(commentId),
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: postKey(variables.postId) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
         },
     });
 }
 
 const useToggleCommentLike = () => {
     return useMutation({
-        mutationFn: toggleCommentLike,
-        onSuccess: (postId: number) => {
-            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
+        mutationFn: ({ commentId }: { commentId: number; postId: number }) => toggleCommentLike(commentId),
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({ queryKey: postKey(variables.postId) });
         },
     });
 }

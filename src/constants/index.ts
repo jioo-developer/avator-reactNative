@@ -1,13 +1,13 @@
 export { colors, default } from './Colors';
 
-const queryKeys = {
-    AUTH: "auth",
-    POST: "post",
-    GET_ME: "getMe",
-    GET_POSTS: "getPosts",
-    GET_POST: "getPost",
-};
-
-export const POSTS_QUERY_KEY = [queryKeys.POST, queryKeys.GET_POSTS] as const;
-
-export { queryKeys };
+export const queryKeys = {
+    AUTH: {
+        ALL: ["auth"] as const,
+        ME: () => [...queryKeys.AUTH.ALL, "getMe"] as const,
+    },
+    POST: {
+        ALL: ["post"] as const,
+        LIST: () => [...queryKeys.POST.ALL, "getPosts"] as const,
+        DETAIL: (postId: number) => [...queryKeys.POST.ALL, "getPost", postId] as const,
+    },
+} as const;
