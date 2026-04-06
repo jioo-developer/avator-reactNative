@@ -13,8 +13,6 @@ export interface CommentInputProps {
   scrollRef?: RefObject<ScrollView | null>;
   replyParent?: ReplyParent | null;
   onCancelReply?: () => void;
-  placeholder?: string;
-  submitLabel?: string;
 }
 
 function CommentInput({
@@ -22,33 +20,33 @@ function CommentInput({
   scrollRef,
   replyParent = null,
   onCancelReply,
-  placeholder = "댓글을 입력하세요",
-  submitLabel = "등록",
 }: CommentInputProps) {
   const insets = useSafeAreaInsets();
   const [text, setText] = useState("");
   const createComment = useCreateComment();
 
-  const handleSubmit = () => {
-    const trimmed = text.trim();
-    if (!trimmed || createComment.isPending) return;
-    createComment.mutate(
-      {
-        postId,
-        content: trimmed,
-        ...(replyParent ? { parentCommentId: replyParent.id } : {}),
-      },
-      {
-        onSuccess: () => {
-          setText("");
-          onCancelReply?.();
-          scrollRef?.current?.scrollToEnd({ animated: true });
-        },
-      },
-    );
-  };
+  const trimmedText = text.trim();
+  const isEmpty = !trimmedText;
 
-  const canSubmit = Boolean(text.trim()) && !createComment.isPending;
+  const inputPlaceholder = replyParent ? "답글을 입력하세요" : "댓글을 입력하세요";
+
+  const handleSubmit = () => {
+    if (isEmpty) return;
+
+    const payload = {
+      postId,
+      content: trimmedText,
+      ...(replyParent && { parentCommentId: replyParent.id }),
+    };
+
+    createComment.mutate(payload, {
+      onSuccess: () => {
+        setText("");
+        onCancelReply && onCancelReply();
+        scrollRef?.current?.scrollToEnd({ animated: true });
+      },
+    });
+  };
 
   return (
     <View
@@ -57,7 +55,8 @@ function CommentInput({
         { paddingBottom: Math.max(insets.bottom, 12) },
       ]}
     >
-      {replyParent ? (
+      {/* 답글 상태 배너 */}
+      {replyParent && (
         <View style={styles.replyBanner}>
           <Text style={styles.replyBannerText} numberOfLines={1}>
             {replyParent.nickname}님에게 답글
@@ -71,11 +70,13 @@ function CommentInput({
             <Ionicons name="close" size={22} color={colors.GRAY_600} />
           </Pressable>
         </View>
-      ) : null}
+      )}
+
+      {/* 입력 영역 */}
       <View style={styles.inputRow}>
         <View style={styles.inputWrap}>
           <InputField
-            placeholder={replyParent ? "답글을 입력하세요" : placeholder}
+            placeholder={inputPlaceholder}
             value={text}
             onChangeText={setText}
             variant="filled"
@@ -83,18 +84,28 @@ function CommentInput({
             onSubmitEditing={handleSubmit}
           />
         </View>
+
         <Pressable
           accessibilityRole="button"
-          disabled={!canSubmit}
+          disabled={isEmpty}
           onPress={handleSubmit}
           style={({ pressed }) => [
             styles.submitBtn,
-            !canSubmit && styles.submitBtnDisabled,
-            pressed && canSubmit && styles.submitBtnPressed,
+            isEmpty && styles.submitBtnDisabled,
+            // Pressable의 상태(pressed)와 입력값 유무(isEmpty)에 따라 스타일을 조건부로 합성
+            // - 기본: submitBtn
+            // - 입력이 비었을 때: submitBtnDisabled
+            // - 눌리는 동안(비어있지 않을 때만): submitBtnPressed
+            pressed && !isEmpty && styles.submitBtnPressed,
           ]}
         >
-          <Text style={[styles.submitLabel, !canSubmit && styles.submitLabelDisabled]}>
-            {submitLabel}
+          <Text
+            style={[
+              styles.submitLabel,
+              isEmpty && styles.submitLabelDisabled,
+            ]}
+          >
+            등록
           </Text>
         </Pressable>
       </View>

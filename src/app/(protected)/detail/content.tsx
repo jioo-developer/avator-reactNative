@@ -1,7 +1,5 @@
 import CommentItem from "@/app/(protected)/post/_reply";
-import CommentInput, {
-  type ReplyParent,
-} from "@/app/(protected)/post/_reply/replyInput";
+import CommentInput, { ReplyParent } from "@/app/(protected)/post/_reply/replyInput";
 import { FeedItem } from "@/components";
 import { colors } from "@/constants";
 import { useGetPostSuspense } from "@/hooks/queries/post/usePost";

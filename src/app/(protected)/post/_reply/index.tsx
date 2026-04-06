@@ -9,10 +9,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface CommentItemProps {
   comment: Comment;
-  /** true면 답글 행(들여쓰기·아이콘·여백). 상세 화면에서 `comment.replies`를 map할 때만 넘김. */
-  isReply?: boolean;
-  /** "답글 남기기" 탭 시 호출. 보통 부모(예: `detail/[id]`)가 `setReplyParent`로 입력창 대상(comment id·닉네임)을 설정 → `CommentInput`의 `replyParent`로 전달됨. */
-  onReply?: () => void;
+  isReply?: boolean; // 답글임을 시각적으로 구분
+  onReply?: () => void; // 답글 남기기 탭 시 호출
 }
 
 function CommentItem({
@@ -44,7 +42,6 @@ function CommentItem({
     );
   };
 
-  const displayBody = comment.isDeleted ? "삭제된 댓글 입니다." : comment.content;
   const showMenu = !comment.isDeleted && auth.id === comment.user.id;
 
   return (
@@ -76,6 +73,7 @@ function CommentItem({
           />
         </View>
       </View>
+      {/* 댓글 내용 노출 */}
       <Text
         style={[
           styles.body,
@@ -83,9 +81,9 @@ function CommentItem({
           comment.isDeleted && styles.bodyDeleted,
         ]}
       >
-        {displayBody}
+        {comment.isDeleted ? "삭제된 댓글 입니다." : comment.content}
       </Text>
-      {/* onReply 있을 때만 답글 액션 노출; 콜백은 상세 화면이 replyParent 상태를 갱신 */}
+      {/* 답글 남기기 버튼 노출 */}
       {!comment.isDeleted && onReply ? (
         <Pressable
           onPress={onReply}
