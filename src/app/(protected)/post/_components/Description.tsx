@@ -1,6 +1,7 @@
 import { InputField } from "@/components";
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { Keyboard } from "react-native";
 
 function DescriptionInput() {
     const { control } = useFormContext();
@@ -20,9 +21,9 @@ function DescriptionInput() {
                     ref={ref}
                     label="내용"
                     placeholder="내용을 입력해주세요."
-                    returnKeyType="next"
+                    returnKeyType="done"
                     submitBehavior="submit"
-                    onSubmitEditing={() => { console.log("submit"); }} // TODO: 이미지 업로드 후 추가
+                    onSubmitEditing={() => Keyboard.dismiss()}
                     value={value}
                     onChangeText={onChange}
                     error={error?.message}

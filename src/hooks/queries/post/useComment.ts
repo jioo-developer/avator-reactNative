@@ -1,7 +1,8 @@
 import { createComment, deleteComment, toggleCommentLike, updateComment } from "@/api/comment";
 import queryClient from "@/api/config/queryClient";
 import { queryKeys } from "@/constants";
-import { useMutation } from "@tanstack/react-query";
+import type { Post } from "@/types";
+import { useMutation, type InfiniteData } from "@tanstack/react-query";
 
 const postKey = (postId: number) => queryKeys.POST.DETAIL(postId);
 
@@ -29,6 +30,21 @@ const useDeleteComment = () => {
     return useMutation({
         mutationFn: ({ commentId }: { commentId: number; postId: number }) => deleteComment(commentId),
         onSuccess: (_data, variables) => {
+            // Feed(infinite list)에서도 댓글 수를 즉시 반영
+            queryClient.setQueryData<InfiniteData<Post[]>>(queryKeys.POST.LIST(), (old) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    pages: old.pages.map((page) =>
+                        page.map((post) =>
+                            post.id === variables.postId
+                                ? { ...post, commentCount: Math.max(0, (post.commentCount ?? 0) - 1) }
+                                : post,
+                        ),
+                    ),
+                };
+            });
+
             queryClient.invalidateQueries({ queryKey: postKey(variables.postId) });
             queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
         },
