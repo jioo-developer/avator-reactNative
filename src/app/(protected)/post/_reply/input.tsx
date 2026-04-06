@@ -2,8 +2,8 @@ import { InputField } from "@/components";
 import { colors } from "@/constants";
 import { useCreateComment } from "@/hooks/queries/post/useComment";
 import { Ionicons } from "@expo/vector-icons";
-import React, { type RefObject, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { type RefObject, useEffect, useMemo, useState } from "react";
+import { Keyboard, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type ReplyParent = { id: number; nickname: string };
@@ -23,12 +23,36 @@ function CommentInput({
 }: CommentInputProps) {
   const insets = useSafeAreaInsets();
   const [text, setText] = useState("");
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const createComment = useCreateComment();
 
   const trimmedText = text.trim();
   const isEmpty = !trimmedText;
 
   const inputPlaceholder = replyParent ? "답글을 입력하세요" : "댓글을 입력하세요";
+
+  useEffect(() => {
+    const showSub = Keyboard.addListener("keyboardDidShow", (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+      // 키보드가 올라올 때 입력창이 가려지지 않도록 리스트를 끝으로 살짝 당김
+      setTimeout(() => scrollRef?.current?.scrollToEnd({ animated: true }), 0);
+    });
+
+    const hideSub = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, [scrollRef]);
+
+  const barBottom = useMemo(() => {
+    // 키보드가 올라오면 absolute bottom을 키보드 높이만큼 올려서 "키보드 위"에 위치시킨다.
+    // 키보드가 없을 때는 기존과 동일하게 safe-area 기준으로 padding만 적용.
+    return keyboardHeight > 0 ? keyboardHeight + 12 : 0;
+  }, [keyboardHeight]);
 
   const handleSubmit = () => {
     if (isEmpty) return;
@@ -43,7 +67,9 @@ function CommentInput({
       onSuccess: () => {
         setText("");
         onCancelReply && onCancelReply();
-        scrollRef?.current?.scrollToEnd({ animated: true });
+        Keyboard.dismiss();
+        setKeyboardHeight(0);
+        setTimeout(() => scrollRef?.current?.scrollToEnd({ animated: true }), 0);
       },
     });
   };
@@ -52,7 +78,7 @@ function CommentInput({
     <View
       style={[
         styles.bar,
-        { paddingBottom: Math.max(insets.bottom, 12) },
+        { paddingBottom: Math.max(insets.bottom, 12), bottom: barBottom },
       ]}
     >
       {/* 답글 상태 배너 */}
@@ -82,6 +108,7 @@ function CommentInput({
             variant="filled"
             returnKeyType="send"
             onSubmitEditing={handleSubmit}
+            onFocus={() => scrollRef?.current?.scrollToEnd({ animated: true })}
           />
         </View>
 

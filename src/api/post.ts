@@ -21,7 +21,7 @@ async function getPost(id: number): Promise<Post> {
 
 // 게시글 수정
 async function updatePost({ id, body }: RequestUpdatePost): Promise<number> {
-    const { data } = await axiosInstance.put(`/posts/${id}`, body);
+    const { data } = await axiosInstance.patch(`/posts/${id}`, body);
     return data;
 }
 
