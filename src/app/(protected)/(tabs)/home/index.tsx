@@ -1,14 +1,14 @@
+import FeedItem from "@/components/FeedItem/FeedItem";
+import RefetchingOverlay from "@/components/RefetchingOverlay/RefetchingOverlay";
 import { colors } from "@/constants";
 import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
 import { Post } from "@/types";
-import { useScrollToTop } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { router, type Href } from "expo-router";
+import { useScrollToTop } from "@react-navigation/native";
+import { router } from "expo-router";
 import React, { useRef } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import FeedItem from "@/components/FeedItem/FeedItem";
-import RefetchingOverlay from "@/components/RefetchingOverlay/RefetchingOverlay";
 
 export default function HomeScreen() {
   const {
@@ -21,6 +21,7 @@ export default function HomeScreen() {
   } = useGetInfinitePosts();
 
   const ref = useRef<FlatList | null>(null);
+
   useScrollToTop(ref);
 
   const feedData = posts?.pages.flat() ?? [];
@@ -61,7 +62,7 @@ export default function HomeScreen() {
       </View>
       <Pressable
         style={styles.writeButton}
-        onPress={() => router.push("/post" as Href)}
+        onPress={() => router.push("/post")}
       >
         <Ionicons name="pencil" size={32} color={colors.WHITE} />
       </Pressable>

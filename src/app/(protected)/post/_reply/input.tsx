@@ -34,7 +34,7 @@ function CommentInput({
   useEffect(() => {
     const showSub = Keyboard.addListener("keyboardDidShow", (e) => {
       setKeyboardHeight(e.endCoordinates.height);
-      // 키보드가 올라올 때 입력창이 가려지지 않도록 리스트를 끝으로 살짝 당김
+      // 키보드가 올라올 때 입력창이 가려지지 않도록 리스트를 끝으로 당김
       setTimeout(() => scrollRef?.current?.scrollToEnd({ animated: true }), 0);
     });
 
@@ -48,12 +48,12 @@ function CommentInput({
     };
   }, [scrollRef]);
 
-  const barBottom = useMemo(() => {
-    // 키보드가 올라오면 absolute bottom을 키보드 높이만큼 올려서 "키보드 위"에 위치시킨다.
-    // 키보드가 없을 때는 기존과 동일하게 safe-area 기준으로 padding만 적용.
+  // 키보드 높이에 따라 바의 위치를 조정
+  const barBottomHeight = useMemo(() => {
     return keyboardHeight > 0 ? keyboardHeight + 12 : 0;
   }, [keyboardHeight]);
 
+  // 댓글 등록 핸들러
   const handleSubmit = () => {
     if (isEmpty) return;
 
@@ -78,7 +78,7 @@ function CommentInput({
     <View
       style={[
         styles.bar,
-        { paddingBottom: Math.max(insets.bottom, 12), bottom: barBottom },
+        { paddingBottom: Math.max(insets.bottom, 12), bottom: barBottomHeight },
       ]}
     >
       {/* 답글 상태 배너 */}

@@ -2,9 +2,9 @@ import { FixedBottomCTA } from "@/components";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
-import EmailDomainSuggestions from "./components/EmailDomainSuggestions";
-import EmailInput from "./components/EmailInput";
-import PasswordInput from "./components/PasswordInput";
+import EmailDomainSuggestions from "./_components/EmailDomainSuggestions";
+import EmailInput from "./_components/EmailInput";
+import PasswordInput from "./_components/PasswordInput";
 
 type FormValues = {
   email: string;
