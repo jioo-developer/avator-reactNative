@@ -46,7 +46,7 @@ export default function HomeScreen() {
           ListEmptyComponent={
             <View style={styles.emptyWrap}>
               <Image
-                source={require("@/assets/images/default-avatar.png")}
+                source={require("@/assets/images/avatar_transparent.png")}
                 style={styles.emptyAvatar}
               />
               <Text style={styles.emptyText}>게시글이 없습니다</Text>
