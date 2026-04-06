@@ -1,5 +1,5 @@
 import queryClient from "@/api/config/queryClient";
-import { createPost, deletePost, getPost, getPosts, updatePost } from "@/api/post";
+import { createPost, deletePost, getPost, getPosts, increasePostView, updatePost } from "@/api/post";
 import { queryKeys } from "@/constants";
 import type { Post } from "@/types";
 import {
@@ -73,11 +73,21 @@ function useDeletePost() {
     });
 }
 
+function useIncreasePostView() {
+    return useMutation({
+        mutationFn: (postId: number) => increasePostView(postId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
+        },
+    });
+}
+
 export {
     useCreatePost,
     useDeletePost,
     useGetInfinitePosts,
     useGetPostSuspense,
+    useIncreasePostView,
     useUpdatePost
 };
 

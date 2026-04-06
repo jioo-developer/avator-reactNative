@@ -1,4 +1,3 @@
-import Profile from "../Profile/Profile";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { useDeletePost } from "@/hooks/queries/post/usePost";
@@ -8,6 +7,7 @@ import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import Profile from "../Profile/Profile";
 interface FeedItemProps {
   post: Post;
   isUsedInDetail?: boolean;
@@ -103,7 +103,7 @@ function FeedItem({ post, isUsedInDetail = false }: FeedItemProps) {
             size={16}
             color={colors.BLACK}
           />
-          <Text style={styles.menuText}>{post.commentCount || "댓글"}</Text>
+          <Text style={styles.menuText}>{post.commentCount ?? "댓글"}</Text>
         </Pressable>
         {/* 조회수 버튼 영역*/}
         <Pressable style={styles.menu}>

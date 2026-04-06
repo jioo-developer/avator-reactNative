@@ -8,6 +8,7 @@ const useCreateComment = () => {
         mutationFn: createComment,
         onSuccess: (postId: number) => {
             queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
+            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
         },
     });
 }
@@ -26,6 +27,7 @@ const useDeleteComment = () => {
         mutationFn: deleteComment,
         onSuccess: (postId: number) => {
             queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
+            queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POSTS] });
         },
     });
 }

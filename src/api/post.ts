@@ -31,5 +31,12 @@ async function deletePost(id: number) {
     return data;
 }
 
-export { createPost, deletePost, getPost, getPosts, updatePost };
+
+// 게시글 조회수 증가
+async function increasePostView(id: number): Promise<{ viewCount: number | null }> {
+    const { data } = await axiosInstance.post(`/posts/${id}/view`);
+    return data;
+}
+
+export { createPost, deletePost, getPost, getPosts, increasePostView, updatePost };
 

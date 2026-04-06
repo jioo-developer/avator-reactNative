@@ -8,4 +8,6 @@ const queryKeys = {
     GET_POST: "getPost",
 };
 
+export const POSTS_QUERY_KEY = [queryKeys.POST, queryKeys.GET_POSTS] as const;
+
 export { queryKeys };

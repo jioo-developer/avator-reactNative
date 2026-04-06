@@ -12,11 +12,12 @@ export interface InputFieldProps extends TextInputProps {
   label?: string;
   variant?: "filled" | "standard" | "outlined";
   error?: string;
+  rightElement?: React.ReactNode;
 }
 
 const InputField = forwardRef<TextInput, InputFieldProps>(
   function InputField(
-    { label, variant = "filled", error = "", ...props },
+    { label, variant = "filled", error = "", rightElement, ...props },
     ref
   ) {
     return (
@@ -35,6 +36,7 @@ const InputField = forwardRef<TextInput, InputFieldProps>(
             style={styles.input}
             {...props}
           />
+          {rightElement ? <View style={styles.rightElement}>{rightElement}</View> : null}
         </View>
         {Boolean(error) && <Text style={styles.error}>{error}</Text>}
       </View>
@@ -65,6 +67,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: 0,
     flex: 1,
+  },
+  rightElement: {
+    marginLeft: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
   error: {
     fontSize: 12,

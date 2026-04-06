@@ -1,7 +1,8 @@
 import { InputField } from "@/components";
-import React from "react";
+import React, { useState } from "react";
 import { Controller, type RegisterOptions, useFormContext } from "react-hook-form";
-import type { TextInputProps } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Pressable, type TextInputProps } from "react-native";
 
 type Props = {
   name: "password" | "passwordConfirm";
@@ -23,6 +24,7 @@ function PasswordInput({
   rules,
 }: Props) {
   const { control, setFocus } = useFormContext();
+  const [isSecure, setIsSecure] = useState(secureTextEntry);
 
   return (
     <Controller
@@ -36,10 +38,24 @@ function PasswordInput({
           placeholder={placeholder}
           submitBehavior={submitBehavior}
           textContentType="oneTimeCode"
-          secureTextEntry={secureTextEntry}
+          secureTextEntry={isSecure}
           value={(value ?? "") as string}
           onChangeText={onChange}
           error={error?.message}
+          rightElement={
+            <Pressable
+              hitSlop={10}
+              onPress={() => setIsSecure((prev) => !prev)}
+              accessibilityRole="button"
+              accessibilityLabel={isSecure ? "비밀번호 표시" : "비밀번호 숨기기"}
+            >
+              <Ionicons
+                name={isSecure ? "eye-outline" : "eye-off-outline"}
+                size={20}
+                color={error ? "#ef4444" : "#6b7280"}
+              />
+            </Pressable>
+          }
           onSubmitEditing={
             onSubmitEditingFocus ? () => setFocus(onSubmitEditingFocus) : undefined
           }
