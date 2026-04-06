@@ -6,6 +6,16 @@ const axiosInstance = axios.create({
     baseURL: "http://192.168.35.118:3030",
 });
 
+/**
+ * 인터셉터에서 `/auth`로 replace할 때 루프를 막기 위해,
+ * 루트 레이아웃이 expo-router pathname을 여기에 맞춘다.
+ */
+let currentPathname = "";
+
+export function setCurrentPathname(path: string): void {
+    currentPathname = path;
+}
+
 // 중복 handleUnauthorized 호출 방지 플래그
 let isHandlingUnauthorized = false;
 
@@ -52,7 +62,10 @@ async function handleUnauthorized(): Promise<void> {
     } catch {
         // 토큰 삭제 실패해도 인증 화면으로는 반드시 이동
     } finally {
-        router.replace("/auth");
+        // 이미 /auth 계열 화면이면 replace로 스택/쿼리가 다시 돌면서 401 루프가 날 수 있음
+        if (currentPathname !== "/auth" && !currentPathname.startsWith("/auth/")) {
+            router.replace("/auth");
+        }
         isHandlingUnauthorized = false;
     }
 }

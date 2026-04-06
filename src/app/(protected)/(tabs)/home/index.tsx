@@ -1,4 +1,3 @@
-import FeedItem from "@/components/FeedItem/FeedItem";
 import RefetchingOverlay from "@/components/RefetchingOverlay/RefetchingOverlay";
 import { colors } from "@/constants";
 import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
@@ -9,6 +8,7 @@ import { router } from "expo-router";
 import React, { useRef } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Content } from "./content";
 
 export default function HomeScreen() {
   const {
@@ -37,7 +37,7 @@ export default function HomeScreen() {
         <FlatList
           ref={ref}
           data={feedData}
-          renderItem={({ item }) => <FeedItem post={item} />}
+          renderItem={({ item }) => <Content post={item} />}
           keyExtractor={(item: Post) => String(item.id)}
           contentContainerStyle={[
             styles.contentContainer,

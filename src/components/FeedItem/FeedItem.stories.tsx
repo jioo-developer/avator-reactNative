@@ -51,10 +51,33 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: { post: mockPosts[0] },
+const noop = () => { };
+
+export const List: Story = {
+  args: {
+    post: mockPosts[0],
+    variant: "list",
+    isLiked: false,
+    onToggleLike: noop,
+    onPressContent: noop,
+  },
 };
 
-export const Second: Story = {
-  args: { post: mockPosts[1] },
+export const ListLiked: Story = {
+  args: {
+    post: mockPosts[1],
+    variant: "list",
+    isLiked: true,
+    onToggleLike: noop,
+    onPressContent: noop,
+  },
+};
+
+export const Detail: Story = {
+  args: {
+    post: mockPosts[0],
+    variant: "detail",
+    isLiked: false,
+    onToggleLike: noop,
+  },
 };

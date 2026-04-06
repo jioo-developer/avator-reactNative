@@ -4,17 +4,20 @@ import { FeedItem } from "@/components";
 import { colors } from "@/constants";
 import { useGetPostSuspense } from "@/hooks/queries/post/usePost";
 import { usePostDetailViewCount } from "@/hooks/queries/post/useViewCount";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { useLayoutEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useDetailActions } from "./_hooks/useDetailActions";
 
 export default function Content({ postId }: { postId: number }) {
   const navigation = useNavigation();
   const { data: post } = useGetPostSuspense(postId);
+  const comments = post.comments ?? [];
+  const { isAuthor, isLiked, isLikePending, onToggleLike, onPressOption } = useDetailActions(post);
   const scrollRef = useRef<ScrollView | null>(null);
   const [replyParent, setReplyParent] = useState<ReplyParent | null>(null);
-  const comments = post.comments ?? [];
 
   usePostDetailViewCount(postId);
 
@@ -36,7 +39,23 @@ export default function Content({ postId }: { postId: number }) {
         >
           <View style={styles.wrapper}>
             {/* 게시글 컴포넌트 */}
-            <FeedItem post={post} isUsedInDetail />
+            <FeedItem
+              post={post}
+              variant="detail"
+              isLiked={isLiked}
+              isLikePending={isLikePending}
+              onToggleLike={onToggleLike}
+              headerOption={
+                isAuthor && (
+                  <Ionicons
+                    name="ellipsis-vertical"
+                    size={24}
+                    color={colors.BLACK}
+                    onPress={onPressOption}
+                  />
+                )
+              }
+            />
             {/* 댓글 컴포넌트 */}
             {comments.map((comment) => (
               <View key={comment.id}>

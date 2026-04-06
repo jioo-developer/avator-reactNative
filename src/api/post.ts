@@ -37,5 +37,19 @@ async function increasePostView(id: number): Promise<{ viewCount: number | null 
     return data;
 }
 
-export { createPost, deletePost, getPost, getPosts, increasePostView, updatePost };
+// 게시글 좋아요 토글 (서버: POST /likes/:postId)
+async function togglePostLike(postId: number): Promise<number> {
+    const { data } = await axiosInstance.post(`/likes/${postId}`);
+    return data;
+}
+
+export {
+    createPost,
+    deletePost,
+    getPost,
+    getPosts,
+    increasePostView,
+    togglePostLike,
+    updatePost,
+};
 

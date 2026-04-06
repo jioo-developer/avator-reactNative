@@ -1,5 +1,13 @@
 import queryClient from "@/api/config/queryClient";
-import { createPost, deletePost, getPost, getPosts, increasePostView, updatePost } from "@/api/post";
+import {
+    createPost,
+    deletePost,
+    getPost,
+    getPosts,
+    increasePostView,
+    togglePostLike,
+    updatePost,
+} from "@/api/post";
 import { queryKeys } from "@/constants";
 import type { Post } from "@/types";
 import {
@@ -82,12 +90,23 @@ function useIncreasePostView() {
     });
 }
 
+function useTogglePostLike() {
+    return useMutation({
+        mutationFn: (postId: number) => togglePostLike(postId),
+        onSuccess: (postId) => {
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.DETAIL(postId) });
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
+        },
+    });
+}
+
 export {
     useCreatePost,
     useDeletePost,
     useGetInfinitePosts,
     useGetPostSuspense,
     useIncreasePostView,
+    useTogglePostLike,
     useUpdatePost
 };
 
