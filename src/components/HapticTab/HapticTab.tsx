@@ -20,3 +20,5 @@ export const HapticTab = forwardRef<
     />
   );
 });
+
+export default HapticTab;

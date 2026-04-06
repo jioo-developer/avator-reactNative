@@ -28,8 +28,6 @@ function getNextViewCount(input: { current?: number; server?: unknown }) {
  * - 화면이 포커스될 때(상세 화면이 보일 때) 조회수 증가 API 호출
  * - 성공하면 캐시를 바로 갱신해서 UI에 즉시 반영
  * - 이후 상세 쿼리는 무효화해서(=다음에) 최신 데이터를 다시 받도록 함
- *
- * @param postId - 조회수를 증가시킬 게시글 ID
  */
 export function usePostDetailViewCount(postId: number) {
   const { mutate: increaseView } = useIncreasePostView();
