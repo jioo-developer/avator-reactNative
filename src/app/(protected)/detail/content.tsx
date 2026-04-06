@@ -9,7 +9,7 @@ import { useNavigation } from "expo-router";
 import { useLayoutEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useDetailActions } from "./_hooks/useDetailActions";
+import { useDetailActions } from "../../../hooks/detail/useDetailActions";
 
 export default function Content({ postId }: { postId: number }) {
   const navigation = useNavigation();
