@@ -1,6 +1,8 @@
 import RefetchingOverlay from "@/components/RefetchingOverlay/RefetchingOverlay";
+import FeedItem from "@/components/FeedItem/FeedItem";
 import { colors } from "@/constants";
-import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
+import useAuth from "@/hooks/queries/auth/useAuth";
+import { useGetInfinitePosts, useTogglePostLike } from "@/hooks/queries/post/usePost";
 import { Post } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollToTop } from "@react-navigation/native";
@@ -8,7 +10,6 @@ import { router } from "expo-router";
 import React, { useRef } from "react";
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Content } from "./content";
 
 export default function HomeScreen() {
   const {
@@ -19,6 +20,9 @@ export default function HomeScreen() {
     isRefetching,
     refetch,
   } = useGetInfinitePosts();
+
+  const { auth } = useAuth();
+  const togglePostLike = useTogglePostLike();
 
   const ref = useRef<FlatList | null>(null);
 
@@ -37,7 +41,25 @@ export default function HomeScreen() {
         <FlatList
           ref={ref}
           data={feedData}
-          renderItem={({ item }) => <Content post={item} />}
+          renderItem={({ item }) => {
+            const isLiked =
+              item.likes?.some((like) => Number(like.userId) === Number(auth.id)) ?? false;
+
+            return (
+              <FeedItem
+                post={item}
+                variant="list"
+                isLiked={isLiked}
+                isLikePending={
+                  togglePostLike.isPending && togglePostLike.variables === item.id
+                }
+                onToggleLike={() => togglePostLike.mutate(item.id)}
+                onPressContent={() =>
+                  router.push({ pathname: "/detail/[id]", params: { id: String(item.id) } })
+                }
+              />
+            );
+          }}
           keyExtractor={(item: Post) => String(item.id)}
           contentContainerStyle={[
             styles.contentContainer,
