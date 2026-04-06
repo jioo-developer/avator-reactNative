@@ -6,13 +6,13 @@ async function createComment(body: CreateCommentDto) {
     return data;
 }
 
-async function deleteComment(id: number) {
-    const { data } = await axiosInstance.delete(`/comments/${id}`);
+async function updateComment({ id, content }: { id: number; content: string }) {
+    const { data } = await axiosInstance.patch(`/comments/${id}`, { content });
     return data;
 }
 
-async function updateComment({ id, content }: { id: number; content: string }) {
-    const { data } = await axiosInstance.patch(`/comments/${id}`, { content });
+async function deleteComment(id: number) {
+    const { data } = await axiosInstance.delete(`/comments/${id}`);
     return data;
 }
 

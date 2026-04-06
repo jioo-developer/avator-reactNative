@@ -12,18 +12,18 @@ const useCreateComment = () => {
     });
 }
 
-const useDeleteComment = () => {
+const useUpdateComment = () => {
     return useMutation({
-        mutationFn: deleteComment,
+        mutationFn: updateComment,
         onSuccess: (postId: number) => {
             queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
         },
     });
 }
 
-const useUpdateComment = () => {
+const useDeleteComment = () => {
     return useMutation({
-        mutationFn: updateComment,
+        mutationFn: deleteComment,
         onSuccess: (postId: number) => {
             queryClient.invalidateQueries({ queryKey: [queryKeys.POST, queryKeys.GET_POST, postId] });
         },

@@ -1,9 +1,11 @@
-import { FixedBottomCTA } from "@/components";
-import { useGetPost, useUpdatePost } from "@/hooks/queries/post/usePost";
+import { FixedBottomCTA, PageErrorFallback, RefetchingOverlay } from "@/components";
+import { useGetPostSuspense, useUpdatePost } from "@/hooks/queries/post/usePost";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ImageUri } from "@/types";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useLayoutEffect } from "react";
+import { Suspense, useLayoutEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { ErrorBoundary } from "react-error-boundary";
 import { StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DescriptionInput from "../_components/Description";
@@ -16,27 +18,53 @@ type FormValues = {
 }
 
 export default function PostUpdateScreen() {
-    const navigation = useNavigation();
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { data: post } = useGetPost(Number(id))
+    const postId = Number(id);
+    const hasValidId = Number.isFinite(postId) && postId > 0;
+
+    if (!hasValidId) {
+        return null;
+    }
+
+    return (
+        <QueryErrorResetBoundary>
+            <ErrorBoundary
+                fallbackRender={(props) => (
+                    <PageErrorFallback
+                        {...props}
+                        message="게시글을 불러오지 못했습니다."
+                    />
+                )}
+            >
+                <Suspense fallback={<RefetchingOverlay />}>
+                    <PostUpdateContent postId={postId} />
+                </Suspense>
+            </ErrorBoundary>
+        </QueryErrorResetBoundary>
+    );
+}
+
+function PostUpdateContent({ postId }: { postId: number }) {
+    const navigation = useNavigation();
+    const { data: post } = useGetPostSuspense(postId);
     const updatePostMutation = useUpdatePost();
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: post?.title ?? "게시글 수정",
+            title: post.title ?? "게시글 수정",
         });
-    }, [navigation, post?.title]);
+    }, [navigation, post.title]);
 
     const postForm = useForm<FormValues>({
         defaultValues: {
-            title: post?.title || "",
-            description: post?.description || "",
-            imageUris: post?.imageUris || [],
+            title: post.title || "",
+            description: post.description || "",
+            imageUris: post.imageUris || [],
         },
     });
 
     const onSubmit = (formValues: FormValues) => {
-        updatePostMutation.mutate({ id: Number(id), body: formValues });
+        updatePostMutation.mutate({ id: postId, body: formValues });
     };
 
     return (

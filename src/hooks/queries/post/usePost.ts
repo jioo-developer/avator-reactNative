@@ -5,7 +5,6 @@ import type { Post } from "@/types";
 import {
     useInfiniteQuery,
     useMutation,
-    useQuery,
     useSuspenseQuery,
     type UseSuspenseQueryResult,
 } from "@tanstack/react-query";
@@ -32,18 +31,12 @@ function useCreatePost() {
     });
 }
 
-function useGetPost(id: number) {
-    return useQuery({
-        queryKey: [queryKeys.POST, queryKeys.GET_POST, id],
-        queryFn: () => getPost(Number(id)),
-        enabled: Boolean(id),
-    });
-}
-
 function useGetPostSuspense(id: number): UseSuspenseQueryResult<Post, Error> {
     return useSuspenseQuery({
         queryKey: [queryKeys.POST, queryKeys.GET_POST, id],
         queryFn: () => getPost(Number(id)),
+        staleTime: 0,
+        refetchOnMount: "always",
     });
 }
 
@@ -84,7 +77,6 @@ export {
     useCreatePost,
     useDeletePost,
     useGetInfinitePosts,
-    useGetPost,
     useGetPostSuspense,
     useUpdatePost
 };
