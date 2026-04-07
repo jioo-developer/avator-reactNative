@@ -50,6 +50,6 @@ export {
     getPosts,
     increasePostView,
     togglePostLike,
-    updatePost,
+    updatePost
 };
 

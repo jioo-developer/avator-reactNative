@@ -30,12 +30,6 @@ function useCreatePost() {
                 text1: "게시글이 생성되었습니다.",
             });
         },
-        onError: () => {
-            Toast.show({
-                type: "error",
-                text1: "게시글 생성에 실패했습니다.",
-            });
-        },
     });
 }
 
