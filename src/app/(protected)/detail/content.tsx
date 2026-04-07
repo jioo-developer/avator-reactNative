@@ -14,8 +14,14 @@ import { useDetailActions } from "../../../hooks/detail/useDetailActions";
 export default function Content({ postId }: { postId: number }) {
   const navigation = useNavigation();
   const { data: post } = useGetPostSuspense(postId);
-  const comments = post.comments ?? [];
-  const { isAuthor, isLiked, isLikePending, onToggleLike, onPressOption } = useDetailActions(post);
+  const {
+    isAuthor,
+    isLiked,
+    isLikePending,
+    onToggleLike,
+    onPressOption,
+    visibleCommentThreads,
+  } = useDetailActions(post);
   const scrollRef = useRef<ScrollView | null>(null);
   const [replyParent, setReplyParent] = useState<ReplyParent | null>(null);
 
@@ -57,39 +63,36 @@ export default function Content({ postId }: { postId: number }) {
               }
             />
             {/* 댓글 컴포넌트 */}
-            {comments.map((comment) => (
+            {visibleCommentThreads.map(({ comment, visibleReplies }) => (
               <View key={comment.id}>
-                {!comment.isDeleted ? (
+                <CommentItem
+                  comment={comment}
+                  postId={postId}
+                  onReply={
+                    !comment.isDeleted
+                      ? () =>
+                        setReplyParent({
+                          id: comment.id,
+                          nickname: comment.user.nickname,
+                        })
+                      : undefined
+                  }
+                />
+                {/* 답글 컴포넌트 */}
+                {visibleReplies.map((reply) => (
                   <CommentItem
-                    comment={comment}
+                    key={reply.id}
+                    comment={reply}
                     postId={postId}
+                    isReply
                     onReply={() =>
                       setReplyParent({
-                        id: comment.id,
-                        nickname: comment.user.nickname,
+                        id: reply.id,
+                        nickname: reply.user.nickname,
                       })
-                      // 답글 남기기 클릭 시 답글 입력창 대상 설정
                     }
                   />
-                ) : null}
-                {/* 답글 컴포넌트 */}
-                {comment.replies
-                  .filter((reply) => !reply.isDeleted)
-                  .map((reply) => (
-                    <CommentItem
-                      key={reply.id}
-                      comment={reply}
-                      postId={postId}
-                      isReply // 대댓글임을 시각적으로 구분
-                      onReply={() =>
-                        setReplyParent({
-                          id: reply.id,
-                          nickname: reply.user.nickname,
-                        })
-                        // 답글 남기기 클릭 시 답글 입력창 대상 설정
-                      }
-                    />
-                  ))}
+                ))}
               </View>
             ))}
           </View>

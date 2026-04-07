@@ -11,8 +11,19 @@ export function useDetailActions(post: Post) {
   const { mutate: deletePost } = useDeletePost();
   const togglePostLike = useTogglePostLike();
 
+  // 좋아요 여부
   const isLiked = post.likes?.some((like) => Number(like.userId) === Number(auth.id)) ?? false;
   const isAuthor = Number(auth.id) === Number(post.author.id);
+
+  // 댓글 스레드 계산
+  const comments = post.comments ?? [];
+  const visibleCommentThreads = comments.flatMap((comment) => {
+    const visibleReplies =
+      comment.replies?.filter((reply) => !reply.isDeleted) ?? [];
+    const showThread = !comment.isDeleted || visibleReplies.length > 0;
+    if (!showThread) return [];
+    return [{ comment, visibleReplies }];
+  });
 
   const onPressOption = () => {
     const options = ["수정", "삭제", "취소"];
@@ -50,6 +61,7 @@ export function useDetailActions(post: Post) {
     isLikePending: togglePostLike.isPending,
     onToggleLike: () => togglePostLike.mutate(post.id),
     onPressOption,
+    visibleCommentThreads,
   };
 }
 
