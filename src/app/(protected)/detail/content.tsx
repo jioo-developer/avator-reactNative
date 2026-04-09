@@ -63,8 +63,8 @@ export default function Content({ postId }: { postId: number }) {
               }
             />
             {/* 댓글 컴포넌트 */}
-            {visibleCommentThreads.map(({ comment, visibleReplies }) => (
-              <View key={comment.id}>
+            {visibleCommentThreads.map(({ comment, visibleReplies }, threadIndex) => (
+              <View key={comment.id ?? `comment-thread-${threadIndex}`}>
                 <CommentItem
                   comment={comment}
                   postId={postId}
@@ -79,9 +79,9 @@ export default function Content({ postId }: { postId: number }) {
                   }
                 />
                 {/* 답글 컴포넌트 */}
-                {visibleReplies.map((reply) => (
+                {visibleReplies.map((reply, replyIndex) => (
                   <CommentItem
-                    key={reply.id}
+                    key={reply.id ?? `reply-${comment.id ?? threadIndex}-${replyIndex}`}
                     comment={reply}
                     postId={postId}
                     isReply

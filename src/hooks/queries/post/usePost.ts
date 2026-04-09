@@ -7,6 +7,7 @@ import {
     increasePostView,
     togglePostLike,
     updatePost,
+    uploadImages,
 } from "@/api/post";
 import { queryKeys } from "@/constants";
 import type { Post } from "@/types";
@@ -57,8 +58,8 @@ function useGetInfinitePosts() {
 function useUpdatePost() {
     return useMutation({
         mutationFn: updatePost,
-        onSuccess: (postId) => {
-            queryClient.invalidateQueries({ queryKey: queryKeys.POST.DETAIL(postId) });
+        onSuccess: (_data, { id }) => {
+            queryClient.invalidateQueries({ queryKey: queryKeys.POST.DETAIL(id) });
             queryClient.invalidateQueries({ queryKey: queryKeys.POST.LIST() });
             router.back();
         },
@@ -94,6 +95,12 @@ function useTogglePostLike() {
     });
 }
 
+function useUploadImages() {
+    return useMutation({
+        mutationFn: uploadImages,
+    });
+}
+
 export {
     useCreatePost,
     useDeletePost,
@@ -101,6 +108,7 @@ export {
     useGetPostSuspense,
     useIncreasePostView,
     useTogglePostLike,
-    useUpdatePost
+    useUpdatePost,
+    useUploadImages
 };
 

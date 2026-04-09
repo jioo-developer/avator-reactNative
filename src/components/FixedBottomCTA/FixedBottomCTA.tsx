@@ -7,14 +7,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 interface FixedBottomCTAProps {
   label: string;
   onPress: () => void;
+  disabled?: boolean;
 }
 
-function FixedBottomCTA({ label, onPress }: FixedBottomCTAProps) {
+function FixedBottomCTA({ label, onPress, disabled = false }: FixedBottomCTAProps) {
   const inset = useSafeAreaInsets();
 
   return (
     <View style={[styles.fixed, { paddingBottom: inset.bottom || 12 }]}>
-      <CommonButton label={label} onPress={onPress} />
+      <CommonButton label={label} onPress={onPress} disabled={disabled} />
     </View>
   );
 }

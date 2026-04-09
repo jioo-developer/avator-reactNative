@@ -20,6 +20,7 @@ function CommonButton({
         styles.container,
         styles[size],
         styles[variant],
+        props.disabled && styles.disabled,
         pressed && styles.pressed,
       ]}
       {...props}
@@ -48,6 +49,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.8,
+  },
+  disabled: {
+    opacity: 0.5,
   },
   standard: {
     fontSize: 14,

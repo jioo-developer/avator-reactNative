@@ -4,6 +4,7 @@ import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import React, { type ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Profile from "../Profile/Profile";
+import ImagePreviewList from "@/app/(protected)/post/_components/ImagePreviewList";
 
 type FeedItemVariant = "list" | "detail";
 
@@ -48,6 +49,16 @@ function FeedItem({
           <Text numberOfLines={3} style={styles.description}>
             {post.description}
           </Text>
+          {Array.isArray(post.imageUris) && post.imageUris.length > 0 && (
+            <View style={styles.imagePreviewWrapper}>
+              <ImagePreviewList
+                imageUris={post.imageUris}
+                variant="fullWidth"
+                fullWidthHorizontalInset={32}
+                enableZoom={isDetail}
+              />
+            </View>
+          )}
         </>
       </Pressable>
       <View style={styles.menuContainer}>
@@ -95,6 +106,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.BLACK,
     marginBottom: 14,
+  },
+  imagePreviewWrapper: {
+    marginTop: 8,
+    marginBottom: 4,
   },
   menuContainer: {
     flexDirection: "row",

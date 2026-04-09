@@ -1,9 +1,31 @@
 import { deleteSecureStore, getSecureStore } from "@/utils/secureStore";
 import axios from "axios";
+import Constants from "expo-constants";
 import { router } from "expo-router";
 
+function guessLanHost(): string | null {
+    // Examples:
+    // - "192.168.0.10:8081"
+    // - "192.168.0.10:8081/--/..."
+    const hostUri =
+        (Constants.expoConfig as any)?.hostUri ??
+        (Constants as any)?.expoConfig?.hostUri ??
+        null;
+    if (typeof hostUri !== "string" || hostUri.length === 0) return null;
+    const host = hostUri.split("/")[0];
+    return host.split(":")[0] ?? null;
+}
+
+// Prefer explicit config, fallback to Expo LAN host.
+export const API_BASE_URL =
+    process.env.EXPO_PUBLIC_API_BASE_URL ??
+    (() => {
+        const host = guessLanHost();
+        return host ? `http://${host}:3030` : "http://localhost:3030";
+    })();
+
 const axiosInstance = axios.create({
-    baseURL: "http://192.168.35.118:3030",
+    baseURL: API_BASE_URL,
 });
 
 /**

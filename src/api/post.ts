@@ -43,6 +43,18 @@ async function togglePostLike(postId: number): Promise<number> {
     return data;
 }
 
+// 이미지 업로드
+async function uploadImages(body: FormData): Promise<string[]> {
+    const { data } = await axiosInstance.post("/images", body, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+
+    return data;
+}
+
+
 export {
     createPost,
     deletePost,
@@ -50,6 +62,7 @@ export {
     getPosts,
     increasePostView,
     togglePostLike,
-    updatePost
+    updatePost,
+    uploadImages
 };
 
