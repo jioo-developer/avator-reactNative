@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePostFooter } from "./handler/usePostFooter";
+import { usePostFooter } from "./usePostFooter";
 
 type PostWriteFooterProps = {
   includeSafeAreaBottomPadding?: boolean;

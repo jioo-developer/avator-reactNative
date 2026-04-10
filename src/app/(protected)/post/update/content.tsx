@@ -9,7 +9,7 @@ import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DescriptionInput from "../_components/DescriptionInput";
 import ImagePreviewList from "../_components/ImagePreviewList";
-import PostFooter from "../_components/PostFooter";
+import PostFooter from "../_components/PostFooter/PostFooter";
 import TitleInput from "../_components/TitleInput";
 
 type FormValues = {
