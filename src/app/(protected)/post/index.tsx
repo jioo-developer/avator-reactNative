@@ -10,6 +10,8 @@ import DescriptionInput from "./_components/DescriptionInput";
 import ImagePreviewList from "./_components/ImagePreviewList";
 import PostFooter from "./_components/PostFooter/PostFooter";
 import TitleInput from "./_components/TitleInput";
+import VoteAttached from "./_components/vote/VoteAttached";
+import VoteModal from "./_components/vote/VoteModal";
 
 type FormValues = {
     title: string;
@@ -47,6 +49,8 @@ export default function WriteScreen() {
             <KeyboardAwareScrollView contentContainerStyle={styles.container}>
                 <TitleInput />
                 <DescriptionInput />
+                <VoteAttached />
+                <VoteModal />
                 <View style={styles.mediaSection}>
                     <PostFooter onUploadingChange={setIsUploadingImages} />
                     {imageUris.length > 0 && (

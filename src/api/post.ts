@@ -1,4 +1,4 @@
-import { CreatePostDto, Post, RequestUpdatePost } from "@/types";
+import { CreatePostDto, CreateVoteDto, Post, RequestUpdatePost, VoteOption } from "@/types";
 import axiosInstance from "./config/axiosInstance";
 
 // 게시글 생성
@@ -54,10 +54,20 @@ async function uploadImages(body: FormData): Promise<string[]> {
     return data;
 }
 
+async function createVote({
+    postId,
+    voteOptionId,
+}: CreateVoteDto): Promise<{ postId: number; voteOption: VoteOption }> {
+    const { data } = await axiosInstance.post(
+        `/posts/${postId}/vote/${voteOptionId}`
+    );
+
+    return data;
+}
+
 
 export {
-    createPost,
-    deletePost,
+    createPost, createVote, deletePost,
     getPost,
     getPosts,
     increasePostView,

@@ -11,10 +11,12 @@ import DescriptionInput from "../_components/DescriptionInput";
 import ImagePreviewList from "../_components/ImagePreviewList";
 import PostFooter from "../_components/PostFooter/PostFooter";
 import TitleInput from "../_components/TitleInput";
+import VoteAttached from "../_components/vote/VoteAttached";
 
 type FormValues = {
     title: string;
     description: string;
+    isvoteAttached: boolean;
     imageUris: ImageUri[];
 };
 
@@ -34,6 +36,7 @@ export default function Content({ postId }: { postId: number }) {
         defaultValues: {
             title: post.title || "",
             description: post.description || "",
+            isvoteAttached: post.hasVote || false,
             imageUris: post.imageUris || [],
         },
     });
@@ -57,6 +60,7 @@ export default function Content({ postId }: { postId: number }) {
                 {/* 제목 입력 컴포넌트 */}
                 <DescriptionInput />
                 {/* 설명 입력 컴포넌트 */}
+                <VoteAttached />
                 <View style={styles.mediaSection}>
                     <PostFooter onUploadingChange={setIsUploadingImages} />
                     {/* 업로드 푸터 컴포넌트 */}

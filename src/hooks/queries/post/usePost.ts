@@ -1,6 +1,7 @@
 import queryClient from "@/api/config/queryClient";
 import {
     createPost,
+    createVote,
     deletePost,
     getPost,
     getPosts,
@@ -101,9 +102,20 @@ function useUploadImages() {
     });
 }
 
+
+function useCreateVote() {
+    return useMutation({
+        mutationFn: createVote,
+        onSuccess: ({ postId }) => {
+            queryClient.invalidateQueries({
+                queryKey: [queryKeys.POST.DETAIL(postId)],
+            });
+        },
+    });
+}
+
 export {
-    useCreatePost,
-    useDeletePost,
+    useCreatePost, useCreateVote, useDeletePost,
     useGetInfinitePosts,
     useGetPostSuspense,
     useIncreasePostView,

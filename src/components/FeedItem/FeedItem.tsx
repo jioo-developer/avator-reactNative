@@ -1,4 +1,5 @@
 import ImagePreviewList from "@/app/(protected)/post/_components/ImagePreviewList";
+import Vote from "@/app/(protected)/post/_components/vote/Vote";
 import { colors } from "@/constants";
 import { useTogglePostLike } from "@/hooks/queries/post/usePost";
 import type { Post } from "@/types";
@@ -7,9 +8,9 @@ import React, { type ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Profile from "../Profile/Profile";
 
-type FeedItemVariant = "list" | "detail";
+export type FeedItemVariant = "list" | "detail";
 
-interface FeedItemProps {
+export interface FeedItemProps {
   post: Post;
   variant: FeedItemVariant;
   isLiked: boolean;
@@ -64,6 +65,30 @@ function FeedItem({
               />
             </View>
           )}
+          {isDetail && post.hasVote && (
+            <View style={styles.voteContainer}>
+              <View style={styles.voteTextContainer}>
+                <MaterialCommunityIcons
+                  name="vote"
+                  size={24}
+                  color={colors.ORANGE_600}
+                />
+                <Text style={styles.voteText}>투표</Text>
+              </View>
+              <Text style={styles.voteCountText}>
+                {post.voteCount}명 창여중...
+              </Text>
+            </View>
+          )}
+          {
+            isDetail && post.hasVote && (
+              <Vote
+                postId={post.id}
+                postVotes={post.votes ?? []}
+                voteCount={post.voteCount}
+              />
+            )
+          }
         </>
       </Pressable>
       {/* 하단 GNB 메뉴 영역 (좋아요, 댓글, 조회수) */}
@@ -140,8 +165,34 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.ORANGE_600,
   },
+  voteContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 14,
+    gap: 16,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: colors.ORANGE_600,
+    backgroundColor: "#FFF3E0",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+  },
+  voteTextContainer: {
+    gap: 6,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  voteText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.ORANGE_600,
+  },
+  voteCountText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.BLACK,
+  },
 });
 
 export default FeedItem;
-export type { FeedItemProps, FeedItemVariant };
 
