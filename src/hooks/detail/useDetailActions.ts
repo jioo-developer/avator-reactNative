@@ -1,6 +1,6 @@
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
-import { useDeletePost, useTogglePostLike } from "@/hooks/queries/post/usePost";
+import { useDeletePost } from "@/hooks/queries/post/usePost";
 import type { Post } from "@/types";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { router } from "expo-router";
@@ -9,7 +9,6 @@ export function useDetailActions(post: Post) {
   const { auth } = useAuth();
   const { showActionSheetWithOptions } = useActionSheet();
   const { mutate: deletePost } = useDeletePost();
-  const togglePostLike = useTogglePostLike();
 
   // 좋아요 여부
   const isLiked = post.likes?.some((like) => Number(like.userId) === Number(auth.id)) ?? false;
@@ -58,8 +57,6 @@ export function useDetailActions(post: Post) {
   return {
     isAuthor,
     isLiked,
-    isLikePending: togglePostLike.isPending,
-    onToggleLike: () => togglePostLike.mutate(post.id),
     onPressOption,
     visibleCommentThreads,
   };

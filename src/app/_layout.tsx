@@ -19,15 +19,13 @@ export default function RootLayout() {
     ...Octicons.font,
   });
 
-  useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
+  const loadedReady = loaded || error;
 
-  if (!loaded && !error) {
-    return null;
-  }
+  useEffect(() => {
+    if (loadedReady) SplashScreen.hideAsync();
+  }, [loadedReady]);
+
+  if (!loadedReady) return null;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -41,6 +39,7 @@ export default function RootLayout() {
 
 SplashScreen.preventAutoHideAsync();
 
+// 루트 네비게이터
 function RootNavigator() {
   const pathname = usePathname();
 

@@ -1,42 +1,50 @@
 import { FixedBottomCTA } from "@/components";
-import { useCreatePost } from "@/hooks/queries/post/usePost";
-import { ImageUri, VoteOption } from "@/types";
+import { useGetPostSuspense, useUpdatePost } from "@/hooks/queries/post/usePost";
+import { ImageUri } from "@/types";
 import { dedupeImageUris, removeImage } from "@/utils/ImageUtils";
-import React, { useState } from "react";
+import { useNavigation } from "expo-router";
+import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import DescriptionInput from "./_components/DescriptionInput";
-import ImagePreviewList from "./_components/ImagePreviewList";
-import PostFooter from "./_components/PostFooter";
-import TitleInput from "./_components/TitleInput";
+import DescriptionInput from "../_components/DescriptionInput";
+import ImagePreviewList from "../_components/ImagePreviewList";
+import PostFooter from "../_components/PostFooter";
+import TitleInput from "../_components/TitleInput";
 
 type FormValues = {
     title: string;
     description: string;
     imageUris: ImageUri[];
-    isVoteOpen: boolean;
-    voteOptions: VoteOption[];
-}
+};
 
-export default function WriteScreen() {
-    const [isUploadingImages, setIsUploadingImages] = useState(false);
-    const createPostMutation = useCreatePost();
+export default function Content({ postId }: { postId: number }) {
+    const navigation = useNavigation();
+    const { data: post } = useGetPostSuspense(postId);
+    const [isUploadingImages, setIsUploadingImages] = useState(false); // 이미지 업로드 상태
+    const { mutate: updatePostMutation, isPending } = useUpdatePost();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: post.title ?? "게시글 수정",
+        });
+    }, [navigation, post.title]);
 
     const postForm = useForm<FormValues>({
         defaultValues: {
-            title: "",
-            description: "",
-            imageUris: [],
-            isVoteOpen: false,
-            voteOptions: [],
+            title: post.title || "",
+            description: post.description || "",
+            imageUris: post.imageUris || [],
         },
     });
 
     const onSubmit = (formValues: FormValues) => {
-        createPostMutation.mutate({
-            ...formValues,
-            imageUris: dedupeImageUris(formValues.imageUris) as ImageUri[],
+        updatePostMutation({
+            id: postId,
+            body: {
+                ...formValues,
+                imageUris: dedupeImageUris(formValues.imageUris) as ImageUri[],
+            },
         });
     };
 
@@ -46,9 +54,12 @@ export default function WriteScreen() {
         <FormProvider {...postForm}>
             <KeyboardAwareScrollView contentContainerStyle={styles.container}>
                 <TitleInput />
+                {/* 제목 입력 컴포넌트 */}
                 <DescriptionInput />
+                {/* 설명 입력 컴포넌트 */}
                 <View style={styles.mediaSection}>
                     <PostFooter onUploadingChange={setIsUploadingImages} />
+                    {/* 업로드 푸터 컴포넌트 */}
                     {imageUris.length > 0 && (
                         <ImagePreviewList
                             imageUris={imageUris}
@@ -58,12 +69,13 @@ export default function WriteScreen() {
                             enableZoom
                         />
                     )}
+                    {/* 이미지 미리보기 컴포넌트 */}
                 </View>
             </KeyboardAwareScrollView>
             <FixedBottomCTA
-                label="게시글 생성"
+                label="게시글 수정"
                 onPress={postForm.handleSubmit(onSubmit)}
-                disabled={isUploadingImages || createPostMutation.isPending}
+                disabled={isUploadingImages || isPending}
             />
         </FormProvider>
     );

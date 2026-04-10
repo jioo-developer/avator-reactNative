@@ -1,17 +1,19 @@
-import RefetchingOverlay from "@/components/RefetchingOverlay/RefetchingOverlay";
 import FeedItem from "@/components/FeedItem/FeedItem";
+import RefetchingOverlay from "@/components/RefetchingOverlay/RefetchingOverlay";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
-import { useGetInfinitePosts, useTogglePostLike } from "@/hooks/queries/post/usePost";
+import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
 import { Post } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollToTop } from "@react-navigation/native";
 import { router } from "expo-router";
 import React, { useRef } from "react";
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Empty from "./empty";
 
 export default function HomeScreen() {
+  const { auth } = useAuth();
   const {
     data: posts,
     fetchNextPage,
@@ -19,21 +21,13 @@ export default function HomeScreen() {
     isFetchingNextPage,
     isRefetching,
     refetch,
-  } = useGetInfinitePosts();
+  } = useGetInfinitePosts(); // 게시글 infinite query
 
-  const { auth } = useAuth();
-  const togglePostLike = useTogglePostLike();
+  const feedData = posts?.pages.flat() ?? []; // 게시글 데이터 배열
 
   const ref = useRef<FlatList | null>(null);
 
   useScrollToTop(ref);
-
-  const feedData = posts?.pages.flat() ?? [];
-  const isEmpty = feedData.length === 0;
-
-  const handleEndReached = () => {
-    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,44 +38,43 @@ export default function HomeScreen() {
           renderItem={({ item }) => {
             const isLiked =
               item.likes?.some((like) => Number(like.userId) === Number(auth.id)) ?? false;
-
+            // isLiked: 게시글이 좋아요 되어있는지 여부
             return (
               <FeedItem
                 post={item}
                 variant="list"
                 isLiked={isLiked}
-                isLikePending={
-                  togglePostLike.isPending && togglePostLike.variables === item.id
-                }
-                onToggleLike={() => togglePostLike.mutate(item.id)}
                 onPressContent={() =>
                   router.push({ pathname: "/detail/[id]", params: { id: String(item.id) } })
                 }
               />
             );
           }}
+          // return feedItem
           keyExtractor={(item: Post) => String(item.id)}
+          // keyExtractor: 게시글 아이템의 고유 키를 반환하는 함수
           contentContainerStyle={[
             styles.contentContainer,
-            isEmpty && styles.emptyContentContainer,
+            feedData.length === 0 && styles.emptyContentContainer,
           ]}
-          ListEmptyComponent={
-            <View style={styles.emptyWrap}>
-              <Image
-                source={require("@/assets/images/avatar_transparent.png")}
-                style={styles.emptyAvatar}
-              />
-              <Text style={styles.emptyText}>게시글이 없습니다</Text>
-            </View>
-          }
-          onEndReached={handleEndReached}
+          // contentContainerStyle: 게시글 목록의 스타일
+          ListEmptyComponent={<Empty />}
+          // ListEmptyComponent: 게시글 목록이 비어있을 때 표시할 컴포넌트
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+          }}
+          // onEndReached: 게시글 목록이 끝에 도달했을 때 호출되는 함수
           onEndReachedThreshold={0.5}
+          // onEndReachedThreshold: 게시글 목록이 끝에 도달했을 때 호출되는 함수의 임계값
           refreshing={isRefetching}
+          // refreshing: 게시글 목록을 새로고침할 때 표시할 컴포넌트
           onRefresh={refetch}
         />
 
         {isRefetching && <RefetchingOverlay />}
+        {/* RefetchingOverlay: 게시글 목록을 새로고침할 때 표시할 컴포넌트 */}
       </View>
+      {/* 게시글 작성 버튼 */}
       <Pressable
         style={styles.writeButton}
         onPress={() => router.push("/post")}

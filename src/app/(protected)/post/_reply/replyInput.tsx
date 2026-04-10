@@ -2,107 +2,95 @@ import { InputField } from "@/components";
 import { colors } from "@/constants";
 import { useCreateComment } from "@/hooks/queries/post/useComment";
 import { Ionicons } from "@expo/vector-icons";
-import React, { type RefObject, useEffect, useMemo, useState } from "react";
+import React, { type RefObject, useEffect, useState } from "react";
 import { Keyboard, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type ReplyParent = { id: number; nickname: string };
 
-export interface CommentInputProps {
+export interface replyInputProps {
   postId: number;
   scrollRef?: RefObject<ScrollView | null>;
   replyParent?: ReplyParent | null;
   onCancelReply?: () => void;
 }
 
-function CommentInput({
+function ReplyInput({
   postId,
   scrollRef,
   replyParent = null,
   onCancelReply,
-}: CommentInputProps) {
+}: replyInputProps) {
   const insets = useSafeAreaInsets();
   const [text, setText] = useState("");
   const [keyboardHeight, setKeyboardHeight] = useState(0);
-  const createComment = useCreateComment();
+  const { mutate: createComment, isPending } = useCreateComment();
 
-  const trimmedText = text.trim();
-  const isEmpty = !trimmedText;
+  const trimmed = text.trim();
+  const disabled = !trimmed || isPending;
 
-  const inputPlaceholder = replyParent ? "답글을 입력하세요" : "댓글을 입력하세요";
+  const handleSubmit = () => {
+    if (!trimmed) return;
+
+    createComment(
+      {
+        postId,
+        content: trimmed,
+        ...(replyParent && { parentCommentId: replyParent.id }),
+      },
+      {
+        onSuccess: () => {
+          setText("");
+          onCancelReply?.();
+          Keyboard.dismiss();
+          setKeyboardHeight(0);
+          setTimeout(() => scrollRef?.current?.scrollToEnd({ animated: true }), 0);
+        },
+      }
+    );
+  };
 
   useEffect(() => {
-    const showSub = Keyboard.addListener("keyboardDidShow", (e) => {
+    const show = Keyboard.addListener("keyboardDidShow", (e) => {
       setKeyboardHeight(e.endCoordinates.height);
-      // 키보드가 올라올 때 입력창이 가려지지 않도록 리스트를 끝으로 당김
       setTimeout(() => scrollRef?.current?.scrollToEnd({ animated: true }), 0);
     });
 
-    const hideSub = Keyboard.addListener("keyboardDidHide", () => {
+    const hide = Keyboard.addListener("keyboardDidHide", () => {
       setKeyboardHeight(0);
     });
 
     return () => {
-      showSub.remove();
-      hideSub.remove();
+      show.remove();
+      hide.remove();
     };
   }, [scrollRef]);
-
-  // 키보드 높이에 따라 바의 위치를 조정
-  const barBottomHeight = useMemo(() => {
-    return keyboardHeight > 0 ? keyboardHeight + 12 : 0;
-  }, [keyboardHeight]);
-
-  // 댓글 등록 핸들러
-  const handleSubmit = () => {
-    if (isEmpty) return;
-
-    const payload = {
-      postId,
-      content: trimmedText,
-      ...(replyParent && { parentCommentId: replyParent.id }),
-    };
-
-    createComment.mutate(payload, {
-      onSuccess: () => {
-        setText("");
-        onCancelReply && onCancelReply();
-        Keyboard.dismiss();
-        setKeyboardHeight(0);
-        setTimeout(() => scrollRef?.current?.scrollToEnd({ animated: true }), 0);
-      },
-    });
-  };
 
   return (
     <View
       style={[
         styles.bar,
-        { paddingBottom: Math.max(insets.bottom, 12), bottom: barBottomHeight },
+        {
+          paddingBottom: Math.max(insets.bottom, 12),
+          bottom: keyboardHeight > 0 ? keyboardHeight + 12 : 0,
+        },
       ]}
     >
-      {/* 답글 상태 배너 */}
       {replyParent && (
         <View style={styles.replyBanner}>
           <Text style={styles.replyBannerText} numberOfLines={1}>
             {replyParent.nickname}님에게 답글
           </Text>
-          <Pressable
-            accessibilityRole="button"
-            onPress={onCancelReply}
-            hitSlop={10}
-            style={styles.replyBannerClose}
-          >
+          <Pressable onPress={onCancelReply} hitSlop={10}>
             <Ionicons name="close" size={22} color={colors.GRAY_600} />
           </Pressable>
         </View>
       )}
 
-      {/* 입력 영역 */}
       <View style={styles.inputRow}>
         <View style={styles.inputWrap}>
           <InputField
-            placeholder={inputPlaceholder}
+            placeholder={replyParent ? "답글을 입력하세요" : "댓글을 입력하세요"}
             value={text}
             onChangeText={setText}
             variant="filled"
@@ -113,23 +101,18 @@ function CommentInput({
         </View>
 
         <Pressable
-          accessibilityRole="button"
-          disabled={isEmpty}
+          disabled={disabled}
           onPress={handleSubmit}
           style={({ pressed }) => [
             styles.submitBtn,
-            isEmpty && styles.submitBtnDisabled,
-            // Pressable의 상태(pressed)와 입력값 유무(isEmpty)에 따라 스타일을 조건부로 합성
-            // - 기본: submitBtn
-            // - 입력이 비었을 때: submitBtnDisabled
-            // - 눌리는 동안(비어있지 않을 때만): submitBtnPressed
-            pressed && !isEmpty && styles.submitBtnPressed,
+            disabled && styles.submitBtnDisabled,
+            pressed && !disabled && styles.submitBtnPressed,
           ]}
         >
           <Text
             style={[
               styles.submitLabel,
-              isEmpty && styles.submitLabelDisabled,
+              disabled && styles.submitLabelDisabled,
             ]}
           >
             등록
@@ -205,4 +188,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CommentInput;
+export default ReplyInput;

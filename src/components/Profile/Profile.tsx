@@ -15,6 +15,7 @@ interface ProfileProps {
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
+// 게시글 작성 시간 포맷팅 start
 function formatCreatedAtRelative(createdAt: string): string {
   const parsed = dayjs(createdAt);
   const now = dayjs();
@@ -25,6 +26,7 @@ function formatCreatedAtRelative(createdAt: string): string {
   }
   return parsed.fromNow();
 }
+// 게시글 작성 시간 포맷팅 end
 
 function Profile({
   onPress,

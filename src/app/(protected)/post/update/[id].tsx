@@ -1,24 +1,9 @@
-import { FixedBottomCTA, PageErrorFallback, RefetchingOverlay } from "@/components";
-import { useGetPostSuspense, useUpdatePost } from "@/hooks/queries/post/usePost";
-import { ImageUri } from "@/types";
-import { dedupeImageUris } from "@/utils/ImageUtils";
+import { PageErrorFallback, RefetchingOverlay } from "@/components";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import React, { Suspense, useLayoutEffect, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { FormProvider, useForm } from "react-hook-form";
-import { StyleSheet, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import DescriptionInput from "../_components/Description";
-import ImagePreviewList from "../_components/ImagePreviewList";
-import PostWriteFooter from "../_components/PostWriteFooter";
-import TitleInput from "../_components/TitleInput";
-
-type FormValues = {
-    title: string;
-    description: string;
-    imageUris: ImageUri[];
-}
+import Content from "./content";
 
 export default function PostUpdateScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -40,85 +25,9 @@ export default function PostUpdateScreen() {
                 )}
             >
                 <Suspense fallback={<RefetchingOverlay />}>
-                    <PostUpdateContent postId={postId} />
+                    <Content postId={postId} />
                 </Suspense>
             </ErrorBoundary>
         </QueryErrorResetBoundary>
     );
 }
-
-function PostUpdateContent({ postId }: { postId: number }) {
-    const navigation = useNavigation();
-    const { data: post } = useGetPostSuspense(postId);
-    const updatePostMutation = useUpdatePost();
-    const [isUploadingImages, setIsUploadingImages] = useState(false);
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            title: post.title ?? "게시글 수정",
-        });
-    }, [navigation, post.title]);
-
-    const postForm = useForm<FormValues>({
-        defaultValues: {
-            title: post.title || "",
-            description: post.description || "",
-            imageUris: post.imageUris || [],
-        },
-    });
-
-    const onSubmit = (formValues: FormValues) => {
-        updatePostMutation.mutate({
-            id: postId,
-            body: {
-                ...formValues,
-                imageUris: dedupeImageUris(formValues.imageUris) as ImageUri[],
-            },
-        });
-    };
-
-    const imageUris = postForm.watch("imageUris");
-    const removeImage = (uri: string) => {
-        postForm.setValue(
-            "imageUris",
-            (postForm.getValues("imageUris") ?? []).filter((img) => img.uri !== uri),
-            { shouldDirty: true, shouldTouch: true }
-        );
-    };
-
-    return (
-        <FormProvider {...postForm}>
-            <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-                <TitleInput />
-                <DescriptionInput />
-                <View style={styles.mediaSection}>
-                    <PostWriteFooter onUploadingChange={setIsUploadingImages} />
-                    {imageUris.length > 0 && (
-                        <ImagePreviewList
-                            imageUris={imageUris}
-                            variant="thumbnail"
-                            editable
-                            onRemove={removeImage}
-                            enableZoom
-                        />
-                    )}
-                </View>
-            </KeyboardAwareScrollView>
-            <FixedBottomCTA
-                label="게시글 수정"
-                onPress={postForm.handleSubmit(onSubmit)}
-                disabled={isUploadingImages || updatePostMutation.isPending}
-            />
-        </FormProvider>
-    );
-}
-
-const styles = StyleSheet.create({
-    container: {
-        margin: 16,
-        gap: 16,
-    },
-    mediaSection: {
-        gap: 8,
-    },
-});

@@ -1,4 +1,3 @@
-import Content from "./content";
 import { PageErrorFallback, RefetchingOverlay } from "@/components";
 import { colors } from "@/constants";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
@@ -6,11 +5,12 @@ import { useLocalSearchParams } from "expo-router";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { StyleSheet, Text, View } from "react-native";
+import Content from "./content";
 
 export default function PostDetailScreen() {
-  const { id: idParam } = useLocalSearchParams<{ id: string }>();
-  const postId = Number(idParam);
-  const hasValidId = Number.isFinite(postId) && postId > 0;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const postId = Number(id); // 게시글 ID
+  const hasValidId = Number.isFinite(postId) && postId > 0; // 게시글 ID가 유효한지 여부
 
   if (!hasValidId) {
     return (

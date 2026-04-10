@@ -1,8 +1,8 @@
-import { API_BASE_URL } from '@/api/config/axiosInstance'; // API 기본 URL import
-import { ImageUri } from '@/types'; // 이미지 타입 정의 import
-import { router } from 'expo-router'; // 페이지 이동을 위한 router import
-import React, { useMemo } from 'react'; // React + useMemo import
-import { Image, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native'; // RN UI 컴포넌트 import
+import { API_BASE_URL } from '@/api/config/axiosInstance';
+import { ImageUri } from '@/types';
+import { router } from 'expo-router';
+import React from 'react';
+import { Image, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 interface ImagePreviewListProps {
     imageUris: ImageUri[] // 이미지 배열
@@ -21,65 +21,38 @@ function ImagePreviewList({
     onRemove,
     enableZoom = true,
 }: ImagePreviewListProps) {
+    const { width } = useWindowDimensions();
 
-    const { width: windowWidth } = useWindowDimensions() // 현재 화면 width 가져오기
+    const isFull = variant === "fullWidth";
+    const fullWidth = Math.max(0, width - fullWidthHorizontalInset);
 
-    const isFullWidth = variant === "fullWidth" // fullWidth 모드 여부
+    const getImageUrl = (uri?: string) => {
+        if (!uri) return "";
 
-    const fullWidth = Math.max(0, windowWidth - fullWidthHorizontalInset) // 실제 사용할 width 계산
+        if (uri.startsWith("http")) return uri;
 
-    const fullWidthStyle =
-        isFullWidth && fullWidth > 0 && { width: fullWidth };
-
-
-    const images = useMemo(() => {
-        return imageUris.map((image) => {
-            const uri = image?.uri ?? "" // 안전하게 uri 추출
-
-            if (!uri) { // uri 없으면
-                return { ...image, imageUrl: "" } // 빈 URL 반환
-            }
-
-            const isAbsolute =
-                uri.startsWith("http://") || uri.startsWith("https://") // 절대 경로 여부 판단
-
-            if (isAbsolute) { // 절대 경로면
-                return { ...image, imageUrl: uri } // 그대로 사용
-            }
-
-            const normalizedPath = uri.startsWith("/") // 상대 경로 처리
-                ? uri.slice(1) // "/" 제거
-                : uri
-
-            return {
-                ...image,
-                imageUrl: `${API_BASE_URL}/${normalizedPath}`,
-            }
-        })
-    }, [imageUris]) // 의존성: imageUris
-
-    const containerStyle = isFullWidth
-        ? styles.fullWidthContainer
-        : styles.container
+        return `${API_BASE_URL}/${uri.startsWith("/") ? uri.slice(1) : uri}`;
+    };
 
     return (
         <ScrollView
             horizontal
-            pagingEnabled={isFullWidth}
+            pagingEnabled={isFull}
             showsHorizontalScrollIndicator={false}
-            style={!isFullWidth ? styles.thumbnailScrollView : undefined}
-            contentContainerStyle={containerStyle}
+            style={!isFull ? styles.thumbnailScrollView : undefined}
+            contentContainerStyle={isFull ? styles.fullWidthContainer : styles.container}
         >
-            {images.map((image, index) => {
-                const key = image.uri + index
+            {imageUris.map((image, index) => {
+                const imageUrl = getImageUrl(image?.uri);
+                const key = image.uri + index;
 
                 return (
                     <View
                         key={key}
                         style={[
                             styles.imageContainer,
-                            isFullWidth && styles.fullWidthImageContainer,
-                            fullWidthStyle,
+                            isFull && styles.fullWidthImageContainer,
+                            isFull && fullWidth > 0 && { width: fullWidth },
                         ]}
                     >
                         <Pressable
@@ -89,16 +62,13 @@ function ImagePreviewList({
                                 if (!enableZoom) return;
                                 router.push({
                                     pathname: "/(protected)/post/image-zoom",
-                                    params: { uri: image.imageUrl },
+                                    params: { uri: imageUrl },
                                 });
                             }}
                         >
                             <Image
-                                source={{ uri: image.imageUrl }}
-                                style={[
-                                    styles.image,
-                                    isFullWidth && styles.fullWidthImage,
-                                ]}
+                                source={{ uri: imageUrl }}
+                                style={[styles.image, isFull && styles.fullWidthImage]}
                             />
                         </Pressable>
 
@@ -115,10 +85,10 @@ function ImagePreviewList({
                             </Pressable>
                         )}
                     </View>
-                )
+                );
             })}
         </ScrollView>
-    )
+    );
 }
 
 export default ImagePreviewList

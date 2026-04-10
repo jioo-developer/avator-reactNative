@@ -1,5 +1,5 @@
 import CommentItem from "@/app/(protected)/post/_reply";
-import CommentInput, { ReplyParent } from "@/app/(protected)/post/_reply/input";
+import ReplyInput, { ReplyParent } from "@/app/(protected)/post/_reply/replyInput";
 import { FeedItem } from "@/components";
 import { colors } from "@/constants";
 import { useGetPostSuspense } from "@/hooks/queries/post/usePost";
@@ -13,17 +13,17 @@ import { useDetailActions } from "../../../hooks/detail/useDetailActions";
 
 export default function Content({ postId }: { postId: number }) {
   const navigation = useNavigation();
-  const { data: post } = useGetPostSuspense(postId);
+  const { data: post } = useGetPostSuspense(postId); // 게시글 데이터 [id]
   const {
     isAuthor,
     isLiked,
-    isLikePending,
-    onToggleLike,
     onPressOption,
     visibleCommentThreads,
   } = useDetailActions(post);
-  const scrollRef = useRef<ScrollView | null>(null);
+
   const [replyParent, setReplyParent] = useState<ReplyParent | null>(null);
+
+  const scrollRef = useRef<ScrollView | null>(null);
 
   usePostDetailViewCount(postId);
 
@@ -49,8 +49,6 @@ export default function Content({ postId }: { postId: number }) {
               post={post}
               variant="detail"
               isLiked={isLiked}
-              isLikePending={isLikePending}
-              onToggleLike={onToggleLike}
               headerOption={
                 isAuthor && (
                   <Ionicons
@@ -98,7 +96,7 @@ export default function Content({ postId }: { postId: number }) {
           </View>
         </KeyboardAwareScrollView>
         {/* 댓글 입력창 컴포넌트 */}
-        <CommentInput
+        <ReplyInput
           postId={post.id}
           scrollRef={scrollRef}
           replyParent={replyParent}

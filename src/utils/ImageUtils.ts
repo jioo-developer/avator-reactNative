@@ -1,4 +1,19 @@
+import type { ImageUri } from "@/types";
 import * as ImagePicker from "expo-image-picker";
+import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
+
+// 이미지 제거 핸들러 (이미지 삭제 시 이미지 배열에서 해당 이미지 URI 제거)
+function removeImage<T extends FieldValues>(
+  form: UseFormReturn<T>,
+  uri: string
+) {
+  const name = "imageUris" as Path<T>;
+  const current = (form.getValues(name) ?? []) as T["imageUris"];
+  form.setValue(name, current.filter((img: ImageUri) => img.uri !== uri), {
+    shouldDirty: true,
+    shouldTouch: true,
+  });
+}
 
 // 이미지 URI 중복 제거
 function dedupeImageUris(items: { uri?: string }[]) {
@@ -35,4 +50,4 @@ function getFormDataImages(
   return formData;
 }
 
-export { dedupeImageUris, getFormDataImages };
+export { dedupeImageUris, getFormDataImages, removeImage };

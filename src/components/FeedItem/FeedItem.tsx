@@ -1,10 +1,11 @@
+import ImagePreviewList from "@/app/(protected)/post/_components/ImagePreviewList";
 import { colors } from "@/constants";
+import { useTogglePostLike } from "@/hooks/queries/post/usePost";
 import type { Post } from "@/types";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import React, { type ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Profile from "../Profile/Profile";
-import ImagePreviewList from "@/app/(protected)/post/_components/ImagePreviewList";
 
 type FeedItemVariant = "list" | "detail";
 
@@ -12,9 +13,7 @@ interface FeedItemProps {
   post: Post;
   variant: FeedItemVariant;
   isLiked: boolean;
-  isLikePending?: boolean;
   onPressContent?: () => void;
-  onToggleLike: () => void;
   headerOption?: ReactNode;
 }
 
@@ -22,13 +21,18 @@ function FeedItem({
   post,
   variant,
   isLiked,
-  isLikePending = false,
   onPressContent,
-  onToggleLike,
   headerOption,
 }: FeedItemProps) {
 
   const isDetail = variant === "detail";
+
+  const { mutate: togglePostLike, isPending } = useTogglePostLike();
+
+  const handleToggleLike = () => {
+    if (isDetail) togglePostLike(post.id);
+  };
+
 
   return (
     <View style={styles.container}>
@@ -49,6 +53,7 @@ function FeedItem({
           <Text numberOfLines={3} style={styles.description}>
             {post.description}
           </Text>
+          {/* 이미지 영역 */}
           {Array.isArray(post.imageUris) && post.imageUris.length > 0 && (
             <View style={styles.imagePreviewWrapper}>
               <ImagePreviewList
@@ -61,8 +66,9 @@ function FeedItem({
           )}
         </>
       </Pressable>
+      {/* 하단 GNB 메뉴 영역 (좋아요, 댓글, 조회수) */}
       <View style={styles.menuContainer}>
-        <Pressable style={styles.menu} disabled={isLikePending} onPress={onToggleLike}>
+        <Pressable style={styles.menu} disabled={isPending} onPress={handleToggleLike}>
           <Octicons
             name={isLiked ? "heart-fill" : "heart"}
             size={16}
