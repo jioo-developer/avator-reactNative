@@ -8,6 +8,7 @@ interface VoteOptionProps {
   totalCount: number;
   isVoted: boolean;
   isSelected: boolean;
+  isLeadingOption?: boolean;
   onSelectOption: () => void;
 }
 
@@ -16,6 +17,7 @@ function VoteOption({
   totalCount,
   isSelected,
   isVoted,
+  isLeadingOption = false,
   onSelectOption,
 }: VoteOptionProps) {
   const percent = option.userVotes.length
@@ -27,8 +29,20 @@ function VoteOption({
       {isVoted ? (
         <View style={styles.votedContainer}>
           <View style={[styles.percent, { width: `${percent}%` }]} />
-          <Text style={styles.content}>{option.content}</Text>
-          <Text style={styles.percentText}>
+          <Text
+            style={[
+              styles.content,
+              isLeadingOption && styles.contentOnLeadingBar,
+            ]}
+          >
+            {option.content}
+          </Text>
+          <Text
+            style={[
+              styles.percentText,
+              isLeadingOption && styles.percentTextOnLeadingBar,
+            ]}
+          >
             {percent}% ({option.userVotes.length})
           </Text>
         </View>
@@ -46,8 +60,8 @@ function VoteOption({
 
 const styles = StyleSheet.create({
   container: {
-    height: 44,
-    borderRadius: 8,
+    height: 48,
+    borderRadius: 10,
     backgroundColor: colors.WHITE,
     borderWidth: 1,
     borderColor: colors.GRAY_300,
@@ -57,10 +71,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   selectedContainer: {
-    height: 44,
-    borderRadius: 8,
+    height: 48,
+    borderRadius: 10,
     backgroundColor: colors.WHITE,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: colors.ORANGE_600,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -68,12 +82,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   content: {
-    marginLeft: 10,
+    marginLeft: 14,
+    zIndex: 1,
+    fontSize: 16,
+    fontWeight: "500",
+    color: colors.BLACK,
   },
   votedContainer: {
-    height: 44,
-    borderRadius: 8,
-    backgroundColor: colors.ORANGE_200,
+    height: 48,
+    borderRadius: 10,
+    backgroundColor: colors.VOTE_BAR_TRACK,
+    borderWidth: 0,
     flexDirection: "row",
     justifyContent: "space-between",
     overflow: "hidden",
@@ -82,16 +101,24 @@ const styles = StyleSheet.create({
   percent: {
     position: "absolute",
     left: 0,
-    right: 0,
-    height: 44,
-    backgroundColor: colors.ORANGE_300,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    top: 0,
+    bottom: 0,
+    zIndex: 1,
+    color: colors.ORANGE_600,
+    backgroundColor: colors.ORANGE_600,
   },
   percentText: {
-    marginRight: 10,
-    fontWeight: "500",
+    marginRight: 14,
+    fontWeight: "700",
+    fontSize: 15,
+    color: colors.BLACK,
+    zIndex: 1,
+  },
+  contentOnLeadingBar: {
+    color: colors.WHITE,
+  },
+  percentTextOnLeadingBar: {
+    color: colors.WHITE,
   },
 });
 

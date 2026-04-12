@@ -3,7 +3,6 @@ import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { useCreateVote } from "@/hooks/queries/post/usePost";
 import { PostVote } from "@/types";
-import { Feather } from "@expo/vector-icons";
 import React, { Fragment, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import VoteOption from "./VoteOption";
@@ -28,7 +27,6 @@ function Vote({ postId, postVotes, voteCount }: VoteProps) {
       <View style={styles.label}>
         <Text style={styles.labelTitle}>투표</Text>
         <View style={styles.labelCount}>
-          <Feather name="user" size={14} color={colors.BLACK} />
           <Text style={styles.labelCountText}>{voteCount}명 참여</Text>
         </View>
       </View>
@@ -39,14 +37,25 @@ function Vote({ postId, postVotes, voteCount }: VoteProps) {
         );
         const isVoted = voteUserIds.includes(Number(auth.id));
 
+        const maxOptionVotes = Math.max(
+          0,
+          ...vote.options.map((o) => o.userVotes.length)
+        );
+
         return (
           <Fragment key={vote.id}>
             {vote.options.map((option) => {
+              const isLeadingOption =
+                isVoted &&
+                maxOptionVotes > 0 &&
+                option.userVotes.length === maxOptionVotes;
+
               return (
                 <VoteOption
                   key={option.id}
                   isVoted={isVoted}
                   isSelected={option.id === selectedId}
+                  isLeadingOption={isLeadingOption}
                   onSelectOption={() => setSelectedId(Number(option.id))}
                   option={option}
                   totalCount={voteCount}
@@ -69,12 +78,14 @@ function Vote({ postId, postVotes, voteCount }: VoteProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 16,
+    marginTop: 12,
     borderWidth: 1,
     borderColor: colors.GRAY_300,
-    borderRadius: 8,
-    padding: 16,
-    gap: 15,
+    borderRadius: 12,
+    paddingVertical: 18,
+    paddingHorizontal: 18,
+    gap: 14,
+    backgroundColor: colors.WHITE,
   },
   label: {
     flexDirection: "row",
@@ -82,18 +93,19 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   labelTitle: {
-    fontSize: 12,
-    fontWeight: "bold",
+    fontSize: 16,
+    fontWeight: "500",
     color: colors.ORANGE_600,
   },
   labelCount: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 2,
+    gap: 6,
   },
   labelCountText: {
-    fontSize: 12,
-    fontWeight: "bold",
+    fontSize: 15,
+    fontWeight: "500",
+    color: colors.BLACK,
   },
 });
 

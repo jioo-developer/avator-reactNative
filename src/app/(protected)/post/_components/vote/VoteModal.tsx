@@ -1,3 +1,4 @@
+import CommonButton from "@/components/CommonButton/CommonButton";
 import { colors } from "@/constants";
 import { VoteOption } from "@/types";
 import { Feather } from "@expo/vector-icons";
@@ -55,13 +56,15 @@ function VoteModal() {
             <Feather name="arrow-left" size={28} color={colors.BLACK} />
           </Pressable>
           <Text style={styles.headerTitle}>투표</Text>
-          <Text style={styles.headerRight} onPress={handleSubmitVote}>
-            첨부
-          </Text>
+          {/* <Pressable onPress={handleSubmitVote} style={styles.headerRight}>
+            <Text style={styles.headerRightText}>첨부</Text>
+          </Pressable> */}
         </View>
         {/* 투표 항목 입력 영역 */}
         <KeyboardAwareScrollView
-          contentContainerStyle={{ gap: 12, padding: 16 }}
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
         >
           {fields.map((field, index) => {
             return (
@@ -73,10 +76,13 @@ function VoteModal() {
             );
           })}
           {/* 투표 항목 추가 버튼 */}
-          <Pressable onPress={handleAppendVote}>
+          <Pressable onPress={handleAppendVote} style={styles.addVotePressable}>
             <Text style={styles.addVoteText}>+ 항목 추가</Text>
           </Pressable>
         </KeyboardAwareScrollView>
+        <View style={styles.footer}>
+          <CommonButton label="투표 만들기" onPress={handleSubmitVote} />
+        </View>
       </SafeAreaView>
     </Modal>
   );
@@ -86,6 +92,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.WHITE,
     flex: 1,
+  },
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    gap: 12,
+    padding: 16,
+    paddingBottom: 24,
   },
   header: {
     flexDirection: "row",
@@ -102,11 +116,24 @@ const styles = StyleSheet.create({
     color: colors.BLACK,
   },
   headerRight: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+  headerRightText: {
     fontSize: 14,
     fontWeight: "bold",
     color: colors.ORANGE_600,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.GRAY_300,
+    backgroundColor: colors.WHITE,
+  },
+  addVotePressable: {
+    paddingVertical: 12,
   },
   addVoteText: {
     fontSize: 14,

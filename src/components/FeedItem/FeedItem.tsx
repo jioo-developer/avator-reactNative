@@ -5,7 +5,7 @@ import { useTogglePostLike } from "@/hooks/queries/post/usePost";
 import type { Post } from "@/types";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import React, { type ReactNode } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Profile from "../Profile/Profile";
 
 export type FeedItemVariant = "list" | "detail";
@@ -65,30 +65,28 @@ function FeedItem({
               />
             </View>
           )}
-          {isDetail && post.hasVote && (
-            <View style={styles.voteContainer}>
-              <View style={styles.voteTextContainer}>
-                <MaterialCommunityIcons
-                  name="vote"
-                  size={24}
-                  color={colors.ORANGE_600}
-                />
-                <Text style={styles.voteText}>투표</Text>
-              </View>
-              <Text style={styles.voteCountText}>
-                {post.voteCount}명 창여중...
+          {/* 투표 미리보기 영역 */}
+          {!isDetail && post.hasVote && (
+            <View style={styles.votePreviewHome}>
+              <Image
+                source={require("@/assets/images/vote-preview.png")}
+                style={styles.votePreviewIcon}
+                accessibilityLabel="투표"
+              />
+              <Text style={styles.votePreviewLabel}>투표</Text>
+              <Text style={styles.votePreviewCount}>
+                {post.voteCount}명 참여중...
               </Text>
             </View>
           )}
-          {
-            isDetail && post.hasVote && (
-              <Vote
-                postId={post.id}
-                postVotes={post.votes ?? []}
-                voteCount={post.voteCount}
-              />
-            )
-          }
+          {/* 상세페이지 투표 영역 */}
+          {isDetail && post.hasVote && (
+            <Vote
+              postId={post.id}
+              postVotes={post.votes ?? []}
+              voteCount={post.voteCount}
+            />
+          )}
         </>
       </Pressable>
       {/* 하단 GNB 메뉴 영역 (좋아요, 댓글, 조회수) */}
@@ -138,10 +136,6 @@ const styles = StyleSheet.create({
     color: colors.BLACK,
     marginBottom: 14,
   },
-  imagePreviewWrapper: {
-    marginTop: 8,
-    marginBottom: 4,
-  },
   menuContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -165,32 +159,35 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.ORANGE_600,
   },
-  voteContainer: {
+  imagePreviewWrapper: {
+    marginBottom: 12,
+  },
+  votePreviewIcon: {
+    width: 22,
+    height: 22,
+    resizeMode: "contain",
+  },
+  votePreviewHome: {
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 14,
-    gap: 16,
+    gap: 8,
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: colors.ORANGE_600,
-    backgroundColor: "#FFF3E0",
-    paddingVertical: 10,
+    borderColor: colors.VOTE_PREVIEW_BORDER,
+    paddingVertical: 16,
     paddingHorizontal: 16,
   },
-  voteTextContainer: {
-    gap: 6,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  voteText: {
+  votePreviewLabel: {
     fontSize: 14,
-    fontWeight: "bold",
-    color: colors.ORANGE_600,
+    fontWeight: "700",
+    color: colors.VOTE_LABEL,
   },
-  voteCountText: {
+  votePreviewCount: {
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: "700",
     color: colors.BLACK,
+    marginLeft: 5
   },
 });
 

@@ -46,7 +46,10 @@ export default function WriteScreen() {
 
     return (
         <FormProvider {...postForm}>
-            <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+            <KeyboardAwareScrollView
+                contentContainerStyle={styles.container}
+                keyboardShouldPersistTaps="always"
+            >
                 <TitleInput />
                 <DescriptionInput />
                 <VoteAttached />

@@ -12,51 +12,61 @@ function CommonButton({
   label,
   size = "large",
   variant = "filled",
+  disabled,
   ...props
 }: CommonButtonProps) {
   return (
     <Pressable
+      disabled={disabled}
       style={({ pressed }) => [
         styles.container,
-        styles[size],
-        styles[variant],
-        props.disabled && styles.disabled,
-        pressed && styles.pressed,
+        size === "large" && styles.large,
+        variant === "filled" ? styles.filledPressable : styles.standardPressable,
+        disabled && styles.disabled,
+        pressed && !disabled && styles.pressed,
       ]}
       {...props}
     >
-      <Text style={styles[variant]}>{label}</Text>
+      <Text
+        style={variant === "filled" ? styles.filledText : styles.standardText}
+      >
+        {label}
+      </Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 8,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
   },
   large: {
     width: "100%",
-    height: 44,
+    height: 48,
   },
-  medium: {},
-  filled: {
+  filledPressable: {
     backgroundColor: colors.ORANGE_600,
-    fontSize: 14,
-    fontWeight: "bold",
+  },
+  standardPressable: {
+    backgroundColor: "transparent",
+  },
+  filledText: {
+    fontSize: 15,
+    fontWeight: "700",
     color: colors.WHITE,
   },
-  pressed: {
-    opacity: 0.8,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  standard: {
+  standardText: {
     fontSize: 14,
     fontWeight: "bold",
     color: colors.ORANGE_600,
+  },
+  pressed: {
+    opacity: 0.85,
+  },
+  disabled: {
+    opacity: 0.45,
   },
 });
 

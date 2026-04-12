@@ -38,7 +38,7 @@ function PostFooter({
         <Ionicons name={"camera"} size={20} color={colors.BLACK} />
         <Text>갤러리</Text>
       </Pressable>
-      <Pressable onPress={() => setValue("isVoteOpen", !getValues("isVoteOpen"))}>
+      <Pressable style={styles.footerIcon} onPress={() => setValue("isVoteOpen", !getValues("isVoteOpen"))}>
         <MaterialCommunityIcons name="vote" size={20} color={colors.BLACK} />
         <Text>투표</Text>
       </Pressable>
@@ -49,10 +49,12 @@ function PostFooter({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    paddingTop: 0,
+    paddingTop: 12,
     paddingBottom: 10,
     paddingHorizontal: 0,
-    backgroundColor: "transparent",
+    backgroundColor: colors.WHITE,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.GRAY_300,
     flexDirection: "row",
     gap: 10,
   },
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 4,
     backgroundColor: colors.GRAY_100,
-    padding: 10,
+    padding: 11,
     borderRadius: 5,
   },
 });
