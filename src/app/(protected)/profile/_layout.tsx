@@ -16,7 +16,6 @@ export default function ProfileLayout() {
       <Stack.Screen
         name="[id]"
         options={{
-          headerShown: true,
           headerBackButtonDisplayMode: "minimal",
           headerShadowVisible: false,
           headerTitle: "",
@@ -42,17 +41,9 @@ export default function ProfileLayout() {
         }}
       />
       <Stack.Screen
-        name="avatar"
+        name="avatar/index"
         options={{
-          headerShown: true,
-          headerBackButtonDisplayMode: "minimal",
-          headerShadowVisible: false,
-          headerTitle: "",
-          headerLeft: () => (
-            <Pressable onPress={() => router.back()}>
-              <Feather name="arrow-left" size={28} color={"black"} />
-            </Pressable>
-          ),
+          headerShown: false,
         }}
       />
     </Stack>

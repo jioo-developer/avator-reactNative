@@ -87,8 +87,43 @@ type RequestUpdatePost = {
   body: CreatePostDto;
 }
 
+// 아바타 관련 타입
+
+type AvatarItemState = {
+  hatId: string;
+  faceId: string;
+  topId: string;
+  bottomId: string;
+  handId: string;
+  skinId: string;
+};
+
+type AvatarListRow = {
+  data: string[];
+  name: keyof AvatarItemState;
+  id: string;
+};
+
+
+type AvatarPreviewProps = {
+  avatarItem: AvatarItemState;
+  hats: string[];
+  faces: string[];
+  tops: string[];
+  bottoms: string[];
+  hands: string[];
+  skins: string[];
+};
+
+type LayerDef = {
+  key: string;
+  zIndex: number;
+  path: string | null;
+};
+
+
 export type {
-  Comment, CreateCommentDto, CreatePostDto, CreateVoteDto, ImageUri, Post, PostVote,
+  AvatarItemState, AvatarListRow, AvatarPreviewProps, Comment, CreateCommentDto, CreatePostDto, CreateVoteDto, ImageUri, LayerDef, Post, PostVote,
   PostVoteOption, Profile, RequestUpdatePost, User, VoteOption
 };
 
