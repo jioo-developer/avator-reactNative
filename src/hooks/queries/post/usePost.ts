@@ -108,7 +108,7 @@ function useCreateVote() {
         mutationFn: createVote,
         onSuccess: ({ postId }) => {
             queryClient.invalidateQueries({
-                queryKey: [queryKeys.POST.DETAIL(postId)],
+                queryKey: queryKeys.POST.DETAIL(postId),
             });
         },
     });
