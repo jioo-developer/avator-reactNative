@@ -1,73 +1,90 @@
 import { colors } from "@/constants";
 import React from "react";
-import { Pressable, PressableProps, StyleSheet, Text } from "react-native";
+import {
+  Pressable,
+  PressableProps,
+  StyleProp,
+  StyleSheet,
+  Text,
+  ViewStyle,
+} from "react-native";
 
-interface CommonButtonProps extends PressableProps {
+interface CustomButtonProps extends PressableProps {
   label: string;
   size?: "medium" | "large";
-  variant?: "standard" | "filled";
+  variant?: "standard" | "filled" | "outlined";
+  style?: StyleProp<ViewStyle>;
 }
 
-function CommonButton({
+function CustomButton({
   label,
   size = "large",
   variant = "filled",
-  disabled,
+  style = null,
   ...props
-}: CommonButtonProps) {
+}: CustomButtonProps) {
   return (
     <Pressable
-      disabled={disabled}
       style={({ pressed }) => [
         styles.container,
-        size === "large" && styles.large,
-        variant === "filled" ? styles.filledPressable : styles.standardPressable,
-        disabled && styles.disabled,
-        pressed && !disabled && styles.pressed,
+        styles[size],
+        styles[variant],
+        props.disabled && styles.disabled,
+        pressed && styles.pressed,
+        style,
       ]}
       {...props}
     >
-      <Text
-        style={variant === "filled" ? styles.filledText : styles.standardText}
-      >
-        {label}
-      </Text>
+      <Text style={styles[`${variant}Text`]}>{label}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
+    borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
   },
   large: {
     width: "100%",
-    height: 48,
+    height: 44,
   },
-  filledPressable: {
+  medium: {
+    height: 38,
+    alignSelf: "center",
+    paddingHorizontal: 12,
+  },
+  filled: {
     backgroundColor: colors.ORANGE_600,
   },
-  standardPressable: {
-    backgroundColor: "transparent",
+  standard: {},
+  outlined: {
+    backgroundColor: colors.WHITE,
+    borderWidth: 1,
+    borderColor: colors.ORANGE_600,
   },
-  filledText: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: colors.WHITE,
+  pressed: {
+    opacity: 0.8,
+  },
+  disabled: {
+    backgroundColor: colors.GRAY_300,
   },
   standardText: {
     fontSize: 14,
     fontWeight: "bold",
     color: colors.ORANGE_600,
   },
-  pressed: {
-    opacity: 0.85,
+  filledText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.WHITE,
   },
-  disabled: {
-    opacity: 0.45,
+  outlinedText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.ORANGE_600,
   },
 });
 
-export default CommonButton;
+export default CustomButton;

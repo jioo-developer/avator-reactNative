@@ -3,6 +3,7 @@ import { InputField, Profile } from "@/components";
 import { colors } from "@/constants";
 import { Comment } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
+import { router, type Href } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useReplyController } from "./useReplyController";
 
@@ -59,7 +60,9 @@ export default function ReplyItem({
         {/* 프로필 영역 */}
         <View style={styles.profileWrap}>
           <Profile
-            onPress={() => { }}
+            onPress={() =>
+              router.push(`/profile/${comment.user.id}` as Href)
+            }
             imageUri={comment.isDeleted ? "" : comment.user.imageUri}
             nickname={comment.isDeleted ? "(삭제)" : comment.user.nickname}
             createdAt={comment.createdAt}

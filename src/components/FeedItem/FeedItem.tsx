@@ -4,6 +4,7 @@ import { colors } from "@/constants";
 import { useTogglePostLike } from "@/hooks/queries/post/usePost";
 import type { Post } from "@/types";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
+import { router, type Href } from "expo-router";
 import React, { type ReactNode } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Profile from "../Profile/Profile";
@@ -31,23 +32,28 @@ function FeedItem({
   const { mutate: togglePostLike, isPending } = useTogglePostLike();
 
   const handleToggleLike = () => {
-    if (isDetail) togglePostLike(post.id);
+    if (isDetail) {
+      togglePostLike(post.id);
+    } else {
+      router.push({ pathname: "/detail/[id]", params: { id: String(post.id) } });
+    }
   };
-
 
   return (
     <View style={styles.container}>
       <Pressable
         style={styles.contentContainer}
-        onPress={isDetail ? undefined : onPressContent}
+        onPress={!isDetail ? onPressContent : undefined}
         disabled={isDetail}
       >
         <>
           <Profile
-            onPress={() => { }}
             imageUri={post.author.imageUri}
             nickname={post.author.nickname}
             createdAt={post.createdAt}
+            onPress={() =>
+              router.push(`/profile/${post.author.id}` as Href)
+            }
             option={headerOption}
           />
           <Text style={styles.title}>{post.title}</Text>
