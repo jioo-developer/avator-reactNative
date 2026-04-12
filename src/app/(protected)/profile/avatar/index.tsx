@@ -41,7 +41,7 @@ export default function AvatarScreen() {
     ].join("|");
 
     return (
-        <>
+        <View style={styles.screen}>
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <View style={styles.avatarContainer}>
@@ -93,11 +93,15 @@ export default function AvatarScreen() {
                 </PagerView>
             </View>
             <FixedBottomCTA label="저장" onPress={handleSaveAvatar} />
-        </>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        backgroundColor: colors.WHITE,
+    },
     container: {
         flex: 1,
     },

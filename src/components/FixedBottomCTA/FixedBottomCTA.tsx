@@ -1,7 +1,7 @@
 import CommonButton from "../CommonButton/CommonButton";
 import { colors } from "@/constants";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface FixedBottomCTAProps {
@@ -13,8 +13,16 @@ interface FixedBottomCTAProps {
 function FixedBottomCTA({ label, onPress, disabled = false }: FixedBottomCTAProps) {
   const inset = useSafeAreaInsets();
 
+  const bottomPad = Math.max(inset.bottom, 12);
+
   return (
-    <View style={[styles.fixed, { paddingBottom: inset.bottom || 12 }]}>
+    <View
+      style={[
+        styles.fixed,
+        { paddingBottom: bottomPad },
+        Platform.OS === "android" ? styles.fixedAndroid : null,
+      ]}
+    >
       <CommonButton label={label} onPress={onPress} disabled={disabled} />
     </View>
   );
@@ -23,12 +31,18 @@ function FixedBottomCTA({ label, onPress, disabled = false }: FixedBottomCTAProp
 const styles = StyleSheet.create({
   fixed: {
     position: "absolute",
+    left: 0,
+    right: 0,
     bottom: 0,
-    width: "100%",
+    backgroundColor: colors.WHITE,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.GRAY_300,
     paddingTop: 12,
     paddingHorizontal: 16,
+    zIndex: 100,
+  },
+  fixedAndroid: {
+    elevation: 12,
   },
 });
 
