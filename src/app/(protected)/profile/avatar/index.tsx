@@ -10,8 +10,6 @@ import { useAvatarController } from "../../../../hooks/avatar/useAvatarControlle
 
 
 export default function AvatarScreen() {
-    const controller = useAvatarController();
-
     const {
         pagerRef,
         currentTab,
@@ -22,7 +20,7 @@ export default function AvatarScreen() {
         handlePressItem,
         getImageId,
         handleSaveAvatar,
-    } = controller;
+    } = useAvatarController();
 
     return (
         <View style={styles.screen}>

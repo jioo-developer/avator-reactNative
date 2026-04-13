@@ -69,6 +69,7 @@ async function uploadImages(body: FormData): Promise<string[]> {
   return data;
 }
 
+// 투표 생성
 async function createVote({
   postId,
   voteOptionId,
@@ -90,5 +91,6 @@ export {
   increasePostView,
   togglePostLike,
   updatePost,
-  uploadImages,
+  uploadImages
 };
+
