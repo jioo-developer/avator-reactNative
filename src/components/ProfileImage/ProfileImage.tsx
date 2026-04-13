@@ -1,9 +1,11 @@
+import { API_BASE_URL } from "@/api/config/axiosInstance";
 import { colors } from "@/constants";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import React, { ReactNode } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+
 interface ProfileProps {
   onPress: () => void;
   nickname: string;
@@ -15,7 +17,6 @@ interface ProfileProps {
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
-// 게시글 작성 시간 포맷팅 start
 function formatCreatedAtRelative(createdAt: string): string {
   const parsed = dayjs(createdAt);
   const now = dayjs();
@@ -26,7 +27,14 @@ function formatCreatedAtRelative(createdAt: string): string {
   }
   return parsed.fromNow();
 }
-// 게시글 작성 시간 포맷팅 end
+
+/** 게시글 썸네일·마이페이지와 같이 상대 경로면 API 호스트를 붙임 */
+function resolveProfileUri(uri?: string): string | undefined {
+  const t = uri?.trim();
+  if (!t) return undefined;
+  if (t.startsWith("http")) return t;
+  return `${API_BASE_URL}/${t.startsWith("/") ? t.slice(1) : t}`;
+}
 
 function ProfileImage({
   onPress,
@@ -35,13 +43,15 @@ function ProfileImage({
   createdAt,
   option,
 }: ProfileProps) {
+  const resolved = resolveProfileUri(imageUri);
+
   return (
     <View style={styles.container}>
       <Pressable style={styles.profileContainer} onPress={onPress}>
         <Image
           source={
-            imageUri
-              ? { uri: imageUri }
+            resolved
+              ? { uri: resolved }
               : require("@/assets/images/default-avatar.png")
           }
           style={styles.avatar}

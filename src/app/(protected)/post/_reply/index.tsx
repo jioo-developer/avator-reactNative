@@ -1,6 +1,7 @@
 // CommentItem.tsx
 import { InputField, Profile } from "@/components";
 import { colors } from "@/constants";
+import useAuth from "@/hooks/queries/auth/useAuth";
 import { Comment } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { router, type Href } from "expo-router";
@@ -20,6 +21,11 @@ export default function ReplyItem({
   isReply = false,
   onReply,
 }: ReplyItemProps) {
+  const { auth } = useAuth();
+  const isMe = Number(comment.user.id) === Number(auth.id);
+  const profileImageUri =
+    comment.isDeleted ? "" : (isMe && auth.imageUri) || comment.user.imageUri;
+
   const { state, actions } = useReplyController({
     comment,
     postId,
@@ -63,7 +69,7 @@ export default function ReplyItem({
             onPress={() =>
               router.push(`/profile/${comment.user.id}` as Href)
             }
-            imageUri={comment.isDeleted ? "" : comment.user.imageUri}
+            imageUri={profileImageUri}
             nickname={comment.isDeleted ? "(삭제)" : comment.user.nickname}
             createdAt={comment.createdAt}
             option={

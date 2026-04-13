@@ -1,6 +1,7 @@
 import ImagePreviewList from "@/components/_pageComponents/post/ImagePreviewList";
 import Vote from "@/components/_pageComponents/post/vote/Vote";
 import { colors } from "@/constants";
+import useAuth from "@/hooks/queries/auth/useAuth";
 import { useTogglePostLike } from "@/hooks/queries/post/usePost";
 import type { Post } from "@/types";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
@@ -28,6 +29,12 @@ function FeedItem({
 }: FeedItemProps) {
 
   const isDetail = variant === "detail";
+  const { auth } = useAuth();
+  const isMe = Number(post.author.id) === Number(auth.id);
+  // 프로필 이미지 주소
+  const profileImageUri = isMe
+    ? auth.imageUri || post.author.imageUri
+    : post.author.imageUri;
 
   const { mutate: togglePostLike, isPending } = useTogglePostLike();
 
@@ -48,7 +55,7 @@ function FeedItem({
       >
         <>
           <Profile
-            imageUri={post.author.imageUri}
+            imageUri={profileImageUri}
             nickname={post.author.nickname}
             createdAt={post.createdAt}
             onPress={() =>

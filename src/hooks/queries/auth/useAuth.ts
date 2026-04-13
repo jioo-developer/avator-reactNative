@@ -55,6 +55,7 @@ function useUpdateProfile() {
     mutationFn: editProfile,
     onSuccess: (newProfile) => {
       queryClient.setQueryData(queryKeys.AUTH.ME(), newProfile);
+      queryClient.invalidateQueries({ queryKey: queryKeys.POST.ALL });
     },
   });
 }
