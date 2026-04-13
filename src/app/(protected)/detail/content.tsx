@@ -1,4 +1,4 @@
-import CommentItem from "@/app/(protected)/post/_reply";
+import CommentItem from "@/app/(protected)/detail/_reply";
 import { FeedItem } from "@/components";
 import ReplyInput, { ReplyParent } from "@/components/_pageComponents/post/reply/replyInput";
 import { colors } from "@/constants";

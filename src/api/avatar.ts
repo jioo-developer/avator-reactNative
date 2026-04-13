@@ -48,6 +48,7 @@ async function getSkins(): Promise<string[]> {
   return getAvatarList("skins");
 }
 
+// ArrayBuffer를 Base64로 변환
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);
   let binary = "";
