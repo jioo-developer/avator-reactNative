@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Text, View } from "react-native";
 import { fn } from "storybook/test";
-import Profile from "./Profile";
+import ProfileImage from "./ProfileImage";
 
 const meta = {
   title: "Components/Profile",
-  component: Profile,
+  component: ProfileImage,
   tags: ["autodocs"],
   decorators: [
     (Story) => (
@@ -15,7 +15,7 @@ const meta = {
     ),
   ],
   args: { onPress: fn() },
-} satisfies Meta<typeof Profile>;
+} satisfies Meta<typeof ProfileImage>;
 
 export default meta;
 

@@ -7,7 +7,7 @@ import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import { router, type Href } from "expo-router";
 import React, { type ReactNode } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import Profile from "../Profile/Profile";
+import Profile from "../ProfileImage/ProfileImage";
 
 export type FeedItemVariant = "list" | "detail";
 

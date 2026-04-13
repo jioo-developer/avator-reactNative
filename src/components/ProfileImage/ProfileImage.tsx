@@ -28,7 +28,7 @@ function formatCreatedAtRelative(createdAt: string): string {
 }
 // 게시글 작성 시간 포맷팅 end
 
-function Profile({
+function ProfileImage({
   onPress,
   imageUri,
   nickname,
@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+export default ProfileImage;
