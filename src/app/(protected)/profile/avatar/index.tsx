@@ -1,3 +1,4 @@
+import { TAB_LABELS } from "@/api/avatar";
 import { FixedBottomCTA } from "@/components";
 import { colors } from "@/constants";
 import { FlatList, StyleSheet, View } from "react-native";
@@ -7,7 +8,6 @@ import AvatarItem from "./_components/AvatarItem";
 import AvatarPreview from "./_components/AvatarPreview";
 import { useAvatarController } from "./useAvatarController";
 
-const TAB_LABELS = ["모자", "얼굴", "상의", "하의", "손", "피부"] as const;
 
 export default function AvatarScreen() {
     const controller = useAvatarController();
@@ -21,40 +21,15 @@ export default function AvatarScreen() {
         avatarItem,
         handlePressItem,
         getImageId,
-        hats,
-        faces,
-        tops,
-        bottoms,
-        hands,
-        skins,
         handleSaveAvatar,
     } = controller;
-
-    // 미리보기만 expo-image 캐시/뷰 재사용으로 어긋나는 경우가 있어, 조합이 바뀔 때마다 리마운트
-    const previewKey = [
-        avatarItem.hatId,
-        avatarItem.faceId,
-        avatarItem.topId,
-        avatarItem.bottomId,
-        avatarItem.handId,
-        avatarItem.skinId,
-    ].join("|");
 
     return (
         <View style={styles.screen}>
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <View style={styles.avatarContainer}>
-                        <AvatarPreview
-                            key={previewKey}
-                            avatarItem={avatarItem}
-                            hats={hats}
-                            faces={faces}
-                            tops={tops}
-                            bottoms={bottoms}
-                            hands={hands}
-                            skins={skins}
-                        />
+                        <AvatarPreview avatarItem={avatarItem} />
                     </View>
                 </View>
                 <View style={styles.tabContainer}>

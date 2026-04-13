@@ -1,40 +1,73 @@
-import type { AvatarPreviewProps, LayerDef } from "@/types";
-import { Platform, View } from "react-native";
-import { getImageId } from "../useAvatarController";
-import { AvatarImageLayer, PREVIEW_SIZE } from "./AvatarImageLayer";
+import { fetchAvatarPreviewDataUri } from "@/api/avatar";
+import { colors } from "@/constants";
+import type { AvatarPreviewProps } from "@/types";
+import { isCancel } from "axios";
+import { Image } from "expo-image";
+import { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { PREVIEW_SIZE } from "./AvatarImageLayer";
 
-function pathForId(list: string[], id: string): string | null {
-  if (!id) return null;
-  return list.find((item) => getImageId(item) === id) ?? null;
-}
+export default function AvatarPreview({ avatarItem }: AvatarPreviewProps) {
+  const [dataUri, setDataUri] = useState<string | null>(null);
 
-export default function AvatarPreview({
-  avatarItem,
-  hats,
-  faces,
-  tops,
-  bottoms,
-  hands,
-  skins,
-}: AvatarPreviewProps) {
-  const layers: LayerDef[] = [
-    { key: "skin", zIndex: 10, path: pathForId(skins, avatarItem.skinId) },
-    { key: "face", zIndex: 20, path: pathForId(faces, avatarItem.faceId) },
-    { key: "bottom", zIndex: 30, path: pathForId(bottoms, avatarItem.bottomId) },
-    { key: "top", zIndex: 40, path: pathForId(tops, avatarItem.topId) },
-    { key: "hand", zIndex: 50, path: pathForId(hands, avatarItem.handId) },
-    { key: "hat", zIndex: 60, path: pathForId(hats, avatarItem.hatId) },
-  ];
+  useEffect(() => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    const fetchPreview = async () => {
+      try {
+        const uri = await fetchAvatarPreviewDataUri(avatarItem, signal);
+        if (signal.aborted) return;
+        setDataUri(uri);
+      } catch (e) {
+        if (signal.aborted || isCancel(e)) return;
+      }
+    };
+
+    fetchPreview();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [avatarItem]);
 
   return (
     <View
       collapsable={false}
-      needsOffscreenAlphaCompositing={Platform.OS === "ios"}
-      style={{ width: PREVIEW_SIZE, height: PREVIEW_SIZE, position: "relative" }}
+      style={[styles.box, { width: PREVIEW_SIZE, height: PREVIEW_SIZE }]}
     >
-      {layers.map(({ key, zIndex, path }) => (
-        <AvatarImageLayer key={key} zIndex={zIndex} path={path} />
-      ))}
+      {dataUri ? (
+        <Image
+          source={{ uri: dataUri }}
+          style={styles.image}
+          contentFit="contain"
+          transition={0}
+          cachePolicy="none"
+        />
+      ) : null}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  box: {
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: PREVIEW_SIZE,
+    height: PREVIEW_SIZE,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.6)",
+  },
+  errorText: {
+    fontSize: 12,
+    color: colors.GRAY_600,
+    textAlign: "center",
+    paddingHorizontal: 12,
+  },
+});

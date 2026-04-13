@@ -107,12 +107,6 @@ type AvatarListRow = {
 
 type AvatarPreviewProps = {
   avatarItem: AvatarItemState;
-  hats: string[];
-  faces: string[];
-  tops: string[];
-  bottoms: string[];
-  hands: string[];
-  skins: string[];
 };
 
 type LayerDef = {
