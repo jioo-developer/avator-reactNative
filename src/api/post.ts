@@ -14,8 +14,14 @@ async function createPost(body: CreatePostDto) {
 }
 
 // 게시글 목록 조회
-async function getPosts(page: number = 1): Promise<Post[]> {
-  const { data } = await axiosInstance.get(`/posts?page=${page}`);
+async function getPosts(page: number = 1, query?: string): Promise<Post[]> {
+  const normalizedQuery = (query ?? "").trim(); // 검색어 정규화
+
+  const endpoint = normalizedQuery.length
+    ? `/posts/search?query=${encodeURIComponent(normalizedQuery)}&page=${page}`
+    : `/posts?page=${page}`;
+  // 검색어 있으면 검색 엔드포인트, 없으면 전체 게시글 엔드포인트
+  const { data } = await axiosInstance.get(endpoint); // 게시글 목록 조회
   return data;
 }
 

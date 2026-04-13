@@ -44,10 +44,11 @@ function useGetPostSuspense(id: number): UseSuspenseQueryResult<Post, Error> {
     });
 }
 
-function useGetInfinitePosts() {
+function useGetInfinitePosts(query: string = "") {
+    const normalizedQuery = query.trim();
     return useInfiniteQuery({
-        queryKey: queryKeys.POST.LIST(),
-        queryFn: ({ pageParam }) => getPosts(pageParam),
+        queryKey: queryKeys.POST.LIST(normalizedQuery),
+        queryFn: ({ pageParam }) => getPosts(pageParam, normalizedQuery),
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
             const lastPost = lastPage[lastPage.length - 1];

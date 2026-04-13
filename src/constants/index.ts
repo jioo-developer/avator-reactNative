@@ -9,7 +9,7 @@ export const queryKeys = {
     },
     POST: {
         ALL: ["post"] as const,
-        LIST: () => [...queryKeys.POST.ALL, "getPosts"] as const,
+        LIST: (query: string = "") => [...queryKeys.POST.ALL, "getPosts", query] as const,
         DETAIL: (postId: number) => [...queryKeys.POST.ALL, "getPost", postId] as const,
         GET_MY_POSTS: () => [...queryKeys.POST.ALL, "getMyPosts"] as const,
         GET_LIKED_POSTS: () => [...queryKeys.POST.ALL, "getLikedPosts"] as const,

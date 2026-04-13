@@ -7,4 +7,5 @@ export { default as InputField } from "./InputField/InputField";
 export { default as PageErrorFallback } from "./PageErrorFallback";
 export { default as Profile } from "./ProfileImage/ProfileImage";
 export { default as RefetchingOverlay } from "./RefetchingOverlay/RefetchingOverlay";
+export { default as SearchBar } from "./SearchBar/SearchBar";
 

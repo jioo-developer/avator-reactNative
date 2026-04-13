@@ -1,4 +1,4 @@
-import { FeedItem, RefetchingOverlay } from "@/components";
+import { FeedItem, RefetchingOverlay, SearchBar } from "@/components";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
@@ -6,30 +6,35 @@ import { Post } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useScrollToTop } from "@react-navigation/native";
 import { router } from "expo-router";
-import React, { useRef } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Empty from "./empty";
 
 export default function HomeScreen() {
+  const [query, setQuery] = useState(""); // 상단 헤더 검색바에 사용 될 상태
+
   const { auth } = useAuth();
   const {
     data: posts,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isPending,
     isRefetching,
     refetch,
-  } = useGetInfinitePosts(); // 게시글 infinite query
-
-  const feedData = posts?.pages.flat() ?? []; // 게시글 데이터 배열
+  } = useGetInfinitePosts(query); // 게시글 infinite query
 
   const ref = useRef<FlatList | null>(null);
 
   useScrollToTop(ref);
 
+  const feedData = posts?.pages.flat() ?? [];
+  const showInitialLoading = isPending && feedData.length === 0;
+
   return (
     <SafeAreaView style={styles.container}>
+      <SearchBar onSubmit={setQuery} />
       <View style={styles.feedContainer}>
         <FlatList
           ref={ref}
@@ -57,7 +62,7 @@ export default function HomeScreen() {
             feedData.length === 0 && styles.emptyContentContainer,
           ]}
           // contentContainerStyle: 게시글 목록의 스타일
-          ListEmptyComponent={<Empty />}
+          ListEmptyComponent={showInitialLoading ? null : <Empty />}
           // ListEmptyComponent: 게시글 목록이 비어있을 때 표시할 컴포넌트
           onEndReached={() => {
             if (hasNextPage && !isFetchingNextPage) fetchNextPage();
@@ -70,6 +75,11 @@ export default function HomeScreen() {
           onRefresh={refetch}
         />
 
+        {showInitialLoading && (
+          <View style={styles.loadingWrap}>
+            <ActivityIndicator />
+          </View>
+        )}
         {isRefetching && <RefetchingOverlay />}
         {/* RefetchingOverlay: 게시글 목록을 새로고침할 때 표시할 컴포넌트 */}
       </View>
@@ -99,6 +109,11 @@ const styles = StyleSheet.create({
   },
   emptyContentContainer: {
     flexGrow: 1,
+  },
+  loadingWrap: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
   },
   emptyWrap: {
     flex: 1,
