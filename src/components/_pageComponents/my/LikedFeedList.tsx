@@ -1,18 +1,18 @@
-import FeedItem from "@/components/FeedItem/FeedItem";
+import { FeedItem } from "@/components";
 import { colors } from "@/constants";
-import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";
+import useGetInfiniteLikedPosts from "@/hooks/queries/myPage/useGetInfiniteLikedPost";
 import { useScrollToTop } from "@react-navigation/native";
 import React, { useRef, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
-function FeedList() {
+function LikedFeedList() {
   const {
     data: posts,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     refetch,
-  } = useGetInfinitePosts();
+  } = useGetInfiniteLikedPosts();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const ref = useRef<FlatList | null>(null);
   useScrollToTop(ref);
@@ -33,7 +33,7 @@ function FeedList() {
     <FlatList
       ref={ref}
       data={posts?.pages.flat()}
-      renderItem={({ item }) => <FeedItem post={item} variant="list" isLiked={false} />}
+      renderItem={({ item }) => <FeedItem post={item} variant="list" isLiked={true} />}
       keyExtractor={(item) => String(item.id)}
       contentContainerStyle={styles.contentContainer}
       onEndReached={handleEndReached}
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FeedList;
+export default LikedFeedList;

@@ -1,13 +1,13 @@
 import { API_BASE_URL } from "@/api/config/axiosInstance";
-import AuthRoute from "@/components/AuthRoute";
+import { AuthRoute } from "@/components";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import useGetUserProfile from "@/hooks/queries/myPage/useGetUserProfile";
 import { Redirect, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import Tab from "../(tabs)/my/_components/Tab";
-import UserFeedList from "../(tabs)/my/_components/UserFeedList";
+import Tab from "../../../components/_pageComponents/my/Tab";
+import UserFeedList from "../../../components/_pageComponents/my/UserFeedList";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();

@@ -1,5 +1,5 @@
-import ImagePreviewList from "@/app/(protected)/post/_components/ImagePreviewList";
-import Vote from "@/app/(protected)/post/_components/vote/Vote";
+import ImagePreviewList from "@/components/_pageComponents/post/ImagePreviewList";
+import Vote from "@/components/_pageComponents/post/vote/Vote";
 import { colors } from "@/constants";
 import { useTogglePostLike } from "@/hooks/queries/post/usePost";
 import type { Post } from "@/types";

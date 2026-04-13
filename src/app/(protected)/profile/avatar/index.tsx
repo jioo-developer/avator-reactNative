@@ -3,9 +3,9 @@ import { FixedBottomCTA } from "@/components";
 import { colors } from "@/constants";
 import { FlatList, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
-import Tab from "../../(tabs)/my/_components/Tab";
-import AvatarItem from "./_components/AvatarItem";
-import AvatarPreview from "./_components/AvatarPreview";
+import Tab from "../../../../components/_pageComponents/my/Tab";
+import AvatarItem from "../../../../components/avatar/AvatarItem";
+import AvatarPreview from "../../../../components/avatar/AvatarPreview";
 import { useAvatarController } from "./useAvatarController";
 
 

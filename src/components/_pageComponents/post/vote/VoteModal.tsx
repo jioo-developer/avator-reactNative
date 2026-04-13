@@ -1,4 +1,4 @@
-import CommonButton from "@/components/CommonButton/CommonButton";
+import { CommonButton } from "@/components";
 import { colors } from "@/constants";
 import { VoteOption } from "@/types";
 import { Feather } from "@expo/vector-icons";

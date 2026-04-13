@@ -1,6 +1,5 @@
 import { API_BASE_URL } from "@/api/config/axiosInstance";
-import AuthRoute from "@/components/AuthRoute";
-import CustomButton from "@/components/CommonButton/CommonButton";
+import { AuthRoute, CommonButton as CustomButton } from "@/components";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { Href, router } from "expo-router";
@@ -12,9 +11,9 @@ import {
   View
 } from "react-native";
 import PagerView from "react-native-pager-view";
-import LikedFeedList from "./_components/LikedFeedList";
-import MyFeedList from "./_components/MyFeedList";
-import Tab from "./_components/Tab";
+import LikedFeedList from "../../../../components/_pageComponents/my/LikedFeedList";
+import MyFeedList from "../../../../components/_pageComponents/my/MyFeedList";
+import Tab from "../../../../components/_pageComponents/my/Tab";
 
 export default function MyScreen() {
   const { auth } = useAuth();

@@ -1,5 +1,4 @@
-import FeedItem from "@/components/FeedItem/FeedItem";
-import RefetchingOverlay from "@/components/RefetchingOverlay/RefetchingOverlay";
+import { FeedItem, RefetchingOverlay } from "@/components";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { useGetInfinitePosts } from "@/hooks/queries/post/usePost";

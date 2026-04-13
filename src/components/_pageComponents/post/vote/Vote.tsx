@@ -1,4 +1,4 @@
-import CommonButton from "@/components/CommonButton/CommonButton";
+import { CommonButton } from "@/components";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { useCreateVote } from "@/hooks/queries/post/usePost";
