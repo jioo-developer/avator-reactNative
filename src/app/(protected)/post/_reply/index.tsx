@@ -5,7 +5,7 @@ import { Comment } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
 import { router, type Href } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useReplyController } from "./useReplyController";
+import { useReplyController } from "../../../../hooks/reply/useReplyController";
 
 interface ReplyItemProps {
   comment: Comment;

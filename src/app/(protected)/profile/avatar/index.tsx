@@ -6,7 +6,7 @@ import PagerView from "react-native-pager-view";
 import Tab from "../../../../components/_pageComponents/my/Tab";
 import AvatarItem from "../../../../components/avatar/AvatarItem";
 import AvatarPreview from "../../../../components/avatar/AvatarPreview";
-import { useAvatarController } from "./useAvatarController";
+import { useAvatarController } from "../../../../hooks/avatar/useAvatarController";
 
 
 export default function AvatarScreen() {
