@@ -6,8 +6,8 @@ import { Href, router } from "expo-router";
 import { FormProvider, useForm } from "react-hook-form";
 import { Image, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
-import IntroduceInput from "../../../components/_pageComponents/my/IntroduceInput";
-import NicknameInput from "../../../components/_pageComponents/my/NicknameInput";
+import IntroduceInput from "../../../components/page/my/IntroduceInput";
+import NicknameInput from "../../../components/page/my/NicknameInput";
 
 type FormValues = {
   nickname: string;

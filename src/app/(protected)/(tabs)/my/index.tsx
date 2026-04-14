@@ -11,9 +11,9 @@ import {
   View
 } from "react-native";
 import PagerView from "react-native-pager-view";
-import LikedFeedList from "../../../../components/_pageComponents/my/LikedFeedList";
-import MyFeedList from "../../../../components/_pageComponents/my/MyFeedList";
-import Tab from "../../../../components/_pageComponents/my/Tab";
+import LikedFeedList from "../../../../components/page/my/LikedFeedList";
+import MyFeedList from "../../../../components/page/my/MyFeedList";
+import Tab from "../../../../components/page/my/Tab";
 
 export default function MyScreen() {
   const { auth } = useAuth();

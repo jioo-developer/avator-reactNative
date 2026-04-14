@@ -7,11 +7,11 @@ import React, { useLayoutEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import DescriptionInput from "../../../../components/_pageComponents/post/DescriptionInput";
-import ImagePreviewList from "../../../../components/_pageComponents/post/ImagePreviewList";
-import PostFooter from "../../../../components/_pageComponents/post/PostFooter/PostFooter";
-import TitleInput from "../../../../components/_pageComponents/post/TitleInput";
-import VoteAttached from "../../../../components/_pageComponents/post/vote/VoteAttached";
+import DescriptionInput from "../../../../components/page/post/DescriptionInput";
+import ImagePreviewList from "../../../../components/page/post/ImagePreviewList";
+import PostFooter from "../../../../components/page/post/PostFooter/PostFooter";
+import TitleInput from "../../../../components/page/post/TitleInput";
+import VoteAttached from "../../../../components/page/post/vote/VoteAttached";
 
 type FormValues = {
     title: string;

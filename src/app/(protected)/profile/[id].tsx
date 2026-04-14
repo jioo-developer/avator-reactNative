@@ -6,8 +6,8 @@ import useGetUserProfile from "@/hooks/queries/myPage/useGetUserProfile";
 import { Redirect, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import Tab from "../../../components/_pageComponents/my/Tab";
-import UserFeedList from "../../../components/_pageComponents/my/UserFeedList";
+import Tab from "../../../components/page/my/Tab";
+import UserFeedList from "../../../components/page/my/UserFeedList";
 
 export default function ProfileScreen() {
   const navigation = useNavigation();

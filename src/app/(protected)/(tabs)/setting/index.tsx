@@ -1,4 +1,4 @@
-import ListItem from "@/components/_pageComponents/setting/ListItem";
+import ListItem from "@/components/page/setting/ListItem";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/auth/useAuth";
 import { Entypo, Octicons } from "@expo/vector-icons";
