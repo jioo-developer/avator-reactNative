@@ -1,36 +1,13 @@
 # Avatar Community
 
-아바타 꾸미기와 커뮤니티 피드 기능을 결합한 모바일 소셜 앱입니다. 커스텀 아바타를 만들고, 게시글·댓글·좋아요로 다른 사용자와 소통할 수 있습니다.
+리액트 네이티브를 학습하기 위해 가볍게 만들어본 아바타 꾸미기와 커뮤니티 피드 기능을 결합한 모바일 소셜 앱입니다.<br />
+커스텀 아바타를 만들고, 게시글·댓글·좋아요로 다른 사용자와 소통할 수 있습니다.
 
 ## 스크린샷
 
-**인증 진입**
-
-![인증 진입](./docs/screenshots/auth.png)
-
-**회원가입**
-
-![회원가입](./docs/screenshots/signup.png)
-
-**피드 (검색/목록)**
-
-![피드](./docs/screenshots/feed.png)
-
-**게시글 상세 (투표)**
-
-![게시글 상세](./docs/screenshots/post-detail-vote.png)
-
-**내 프로필**
-
-![내 프로필](./docs/screenshots/my-profile.png)
-
-**아바타 편집**
-
-![아바타 편집](./docs/screenshots/avatar-editor.png)
-
-**설정**
-
-![설정](./docs/screenshots/settings.png)
+|                 인증 진입                 |               회원가입               |                    피드 (검색/목록)                     |               게시글 상세 (투표)                |                      내 프로필                       | 아바타 편집 | 설정 |
+| :---------------------------------------: | :----------------------------------: | :-----------------------------------------------------: | :---------------------------------------------: | :--------------------------------------------------: | :---------: | :--: |
+| ![인증 진입](./docs/screenshots/auth.png) | ![피드](./docs/screenshots/feed.png) | ![게시글 상세](./docs/screenshots/post-detail-vote.png) | ![내 프로필](./docs/screenshots/my-profile.png) | ![아바타 편집](./docs/screenshots/avatar-editor.png) |
 
 ## 기술 스택
 
