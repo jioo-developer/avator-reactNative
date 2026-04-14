@@ -31,7 +31,6 @@ src/
 ├── app/                          # Expo Router 페이지
 │   ├── index.tsx                 # 진입점 (로그인 여부에 따라 리다이렉트)
 │   ├── auth/                     # 인증 화면 (진입, 로그인, 회원가입)
-│   ├── storybook.tsx             # Storybook 라우트
 │   └── (protected)/              # 인증 필요 화면 (AuthRoute 래핑)
 │       ├── (tabs)/               # 탭 네비게이션
 │       │   ├── home/             # 피드 (무한 스크롤, 검색)

@@ -2,7 +2,6 @@
 .expo/
 dist/
 web-build/
-storybook-static/
 ios/
 android/
 coverage/
