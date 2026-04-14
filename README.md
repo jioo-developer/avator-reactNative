@@ -5,9 +5,9 @@
 
 ## 스크린샷
 
-|                 인증 진입                 |               회원가입               |                    피드 (검색/목록)                     |               게시글 상세 (투표)                |                      내 프로필                       | 아바타 편집 | 설정 |
-| :---------------------------------------: | :----------------------------------: | :-----------------------------------------------------: | :---------------------------------------------: | :--------------------------------------------------: | :---------: | :--: |
-| ![인증 진입](./docs/screenshots/auth.png) | ![피드](./docs/screenshots/feed.png) | ![게시글 상세](./docs/screenshots/post-detail-vote.png) | ![내 프로필](./docs/screenshots/my-profile.png) | ![아바타 편집](./docs/screenshots/avatar-editor.png) |
+| 인증 진입 | 피드 (검색/목록) | 게시글 상세 (투표) | 내 프로필 | 아바타 편집 |
+| :---: | :---: | :---: | :---: | :---: |
+| ![인증 진입](./docs/screenshots/auth.png) | ![피드 (검색/목록)](./docs/screenshots/feed.png) | ![게시글 상세 (투표)](./docs/screenshots/post-detail-vote.png) | ![내 프로필](./docs/screenshots/my-profile.png) | ![아바타 편집](./docs/screenshots/avatar-editor.png) |
 
 ## 기술 스택
 
@@ -23,8 +23,6 @@
 | **UI / 애니메이션** | react-native-reanimated, @gorhom/bottom-sheet, react-native-gesture-handler          |
 | **미디어**          | expo-image, expo-image-picker, react-native-svg                                      |
 | **기타 UI**         | react-native-toast-message, @expo/react-native-action-sheet, react-native-pager-view |
-| **문서/UI 개발**    | Storybook (온디바이스 + 웹)                                                          |
-| **린트**            | ESLint (eslint-config-expo)                                                          |
 
 ## 프로젝트 구조
 
@@ -67,3 +65,4 @@ src/
 ├── constants/                    # 색상, React Query 키 팩토리
 └── utils/                        # secureStore, ApiHeader, 이미지 헬퍼, debounce
 ```
+
