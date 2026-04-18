@@ -23,5 +23,9 @@ async function getUserInfo() {
     return data;
 }
 
-export { getUserInfo, postsLogin, postsSignUp };
+async function deleteAccount() {
+    await axiosInstance.delete("/auth/me");
+}
+
+export { deleteAccount, getUserInfo, postsLogin, postsSignUp };
 

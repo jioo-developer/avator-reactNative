@@ -1,6 +1,6 @@
-import { getUserInfo, postsLogin, postsSignUp } from "@/api/auth";
-import { editProfile } from "@/api/profile";
+import { deleteAccount, getUserInfo, postsLogin, postsSignUp } from "@/api/auth";
 import queryClient from "@/api/config/queryClient";
+import { editProfile } from "@/api/profile";
 import { queryKeys } from "@/constants";
 import { User } from "@/types";
 import { setHeader } from "@/utils/ApiHeader";
@@ -14,7 +14,13 @@ import { setClearAuth, useGetUserInfo } from "./useGetUserInfo";
 function useSignup() {
   return useMutation({
     mutationFn: postsSignUp,
-    onSuccess: () => router.replace("/auth/login"),
+    onSuccess: () => {
+      router.replace("/auth/login");
+      Toast.show({
+        type: "success",
+        text1: "회원가입이 완료되었습니다.",
+      });
+    },
     onError: () => {
       console.log("signup error");
     },
@@ -34,7 +40,6 @@ function useLogin() {
         queryKey: queryKeys.AUTH.ME(),
         queryFn: getUserInfo,
       });
-
       // 로그인 이후 액션
       Toast.show({
         type: "success",
@@ -60,6 +65,25 @@ function useUpdateProfile() {
   });
 }
 
+function useDeleteAccount() {
+  return useMutation({
+    mutationFn: deleteAccount,
+    onSuccess: async () => {
+      await setClearAuth();
+      router.replace("/auth");
+      Toast.show({
+        type: "success",
+        text1: "계정이 삭제되었습니다.",
+      });
+    },
+    onError: () => {
+      Alert.alert(
+        "오류",
+        "계정 삭제에 실패했습니다. 다시 시도해주세요.",
+      );
+    },
+  });
+}
 
 async function logout() {
   await setClearAuth();
@@ -71,6 +95,7 @@ function useAuth() {
   const loginMutation = useLogin();
   const signupMutation = useSignup();
   const profileMutation = useUpdateProfile();
+  const deleteAccountMutation = useDeleteAccount();
   return {
     auth: {
       id: data?.id || "",
@@ -88,6 +113,7 @@ function useAuth() {
     loginMutation,
     signupMutation,
     profileMutation,
+    deleteAccountMutation,
     logout,
   };
 }

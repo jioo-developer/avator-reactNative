@@ -1,8 +1,12 @@
 const tintLight = '#208AEF';
 const tintDark = '#6eb6ff';
 
+const darkBackground = '#151718';
+
 export const colors = {
   PRIMARY: tintLight,
+  DARK_BACKGROUND: darkBackground,
+  GREEN_600: "#2D6A4F",
   WHITE: "#FFF",
   RED_100: "#FFDFDF",
   RED_500: "#FF5F5F",
@@ -16,6 +20,7 @@ export const colors = {
   GRAY_100: "#F6F6F6",
   GRAY_200: "#E2E8F0",
   GRAY_300: "#D1D5DB",
+  GRAY_400: "#9CA3AF",
   GRAY_500: "#6B7280",
   GRAY_600: "#4B5563",
   GRAY_700: "#374151",
@@ -30,7 +35,7 @@ export default {
   },
   dark: {
     text: '#ECEDEE',
-    background: '#151718',
+    background: darkBackground,
     tint: tintDark,
   },
 } as const;
