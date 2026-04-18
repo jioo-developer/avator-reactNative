@@ -1,5 +1,6 @@
 export { default as AuthRoute } from "./Common/AuthRoute";
 export { default as CommonButton } from "./Common/CommonButton/CommonButton";
+export { default as CommonToggle } from "./Common/CommonToggle/CommonToggle";
 export { default as FeedItem } from "./Common/FeedItem/FeedItem";
 export { default as FixedBottomCTA } from "./Common/FixedBottomCTA/FixedBottomCTA";
 export { default as HapticTab } from "./Common/HapticTab/HapticTab";

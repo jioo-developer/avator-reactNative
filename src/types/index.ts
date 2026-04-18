@@ -115,9 +115,18 @@ type LayerDef = {
   path: string | null;
 };
 
+type RequestUser = {
+  email: string;
+  password: string;
+};
+
+type RequestLogin = RequestUser & {
+  expoPushToken?: string;
+};
+
 
 export type {
   AvatarItemState, AvatarListRow, AvatarPreviewProps, Comment, CreateCommentDto, CreatePostDto, CreateVoteDto, ImageUri, LayerDef, Post, PostVote,
-  PostVoteOption, Profile, RequestUpdatePost, User, VoteOption
+  PostVoteOption, Profile, RequestLogin, RequestUpdatePost, RequestUser, User, VoteOption
 };
 
